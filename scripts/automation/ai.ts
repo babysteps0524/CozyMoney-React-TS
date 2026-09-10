@@ -38,7 +38,7 @@ export async function ai(prompt: string) {
           body: JSON.stringify({
             model:
               n === "groq"
-                ? "llama-3.3-70b-versatile"
+                ? "openai/gpt-oss-20b"
                 : "openai/gpt-oss-120b:free",
             messages: [
               { role: "system", content: "JSON only" },
