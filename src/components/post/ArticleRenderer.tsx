@@ -234,18 +234,19 @@ export function ArticleRenderer({ sections }: { sections: ContentBlock[] }) {
 
         if (b.type === "image") {
           return (
-            <figure key={i} className="my-8">
+            <figure key={i} className="block w-full clear-both my-8">
               <img
                 src={b.src}
                 alt={b.alt}
                 width="1200"
                 height="675"
                 loading="lazy"
-                className="w-full aspect-video object-cover rounded-2xl"
+                decoding="async"
+                className="block w-full max-w-full aspect-video object-cover rounded-2xl"
               />
 
               {b.credit && (
-                <figcaption className="mt-2 text-xs text-cm-muted">
+                <figcaption className="block mt-2 text-xs text-cm-muted">
                   {b.credit}
                 </figcaption>
               )}
