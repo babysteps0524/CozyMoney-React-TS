@@ -1,0 +1,106 @@
+{
+  "id": "accounting-2026-accounting-framework-act",
+  "title": "업계 숙원 회계기본법 제정 논란과 투명성 강화 및 관치 규제 쟁점 분석",
+  "description": "최근 대두된 회계기본법 제정의 쟁점과 회계 사각지대 해소 방안, 그리고 관치 규제 우려에 대한 산업계의 다양한 목소리를 분석합니다.",
+  "slug": "accounting-framework-act-issues-and-perspectives",
+  "category": "accounting",
+  "tags": [
+    "회계기본법",
+    "회계투명성",
+    "관치규제",
+    "회계기준원",
+    "재무회계"
+  ],
+  "keywords": [
+    "회계기본법",
+    "회계 사각지대",
+    "회계 규제",
+    "기업 회계"
+  ],
+  "date": "2026-03-31",
+  "updated": "2026-03-31",
+  "author": "CozyMoney",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1611125832047-1d7ad1e8e48f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8MXx8JUVDJTk3JTg1JUVBJUIzJTg0JTIwJUVDJTg4JTk5JUVDJTlCJTkwJTIwJUVEJTlBJThDJUVBJUIzJTg0JUVBJUI4JUIwJUVCJUIzJUI4JUVCJUIyJTk1JTIwJUVDJUEwJTlDJUVDJUEwJTk1JTIwJUVCJTg1JUJDJUVCJTlFJTgwJUVBJUIzJUJDJTIwJUVEJTg4JUFDJUVCJUFBJTg1JUVDJTg0JUIxJTIwJUVBJUIwJTk1JUVEJTk5JTk0JTIwJUVCJUIwJThGJTIwJUVBJUI0JTgwJUVDJUI5JTk4JTIwJUVBJUI3JTlDJUVDJUEwJTlDJTIwJUVDJTlGJTgxJUVDJUEwJTkwJTIwJUVCJUI2JTg0JUVDJTg0JTlEJTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkxMTU3NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "black and silver calculator beside black pen",
+      "credit": "Photo by Recha Oktaviani on Unsplash",
+      "provider": "unsplash"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1666148723250-fffd75f148dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8Mnx8JUVDJTk3JTg1JUVBJUIzJTg0JTIwJUVDJTg4JTk5JUVDJTlCJTkwJTIwJUVEJTlBJThDJUVBJUIzJTg0JUVBJUI4JUIwJUVCJUIzJUI4JUVCJUIyJTk1JTIwJUVDJUEwJTlDJUVDJUEwJTk1JTIwJUVCJTg1JUJDJUVCJTlFJTgwJUVBJUIzJUJDJTIwJUVEJTg4JUFDJUVCJUFBJTg1JUVDJTg0JUIxJTIwJUVBJUIwJTk1JUVEJTk5JTk0JTIwJUVCJUIwJThGJTIwJUVBJUI0JTgwJUVDJUI5JTk4JTIwJUVBJUI3JTlDJUVDJUEwJTlDJTIwJUVDJTlGJTgxJUVDJUEwJTkwJTIwJUVCJUI2JTg0JUVDJTg0JTlEJTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkxMTU3NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "graphical user interface",
+      "credit": "Photo by kenny cheng on Unsplash",
+      "provider": "unsplash"
+    }
+  ],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "회계기본법 제정을 둘러싼 찬반 양측의 핵심 쟁점"
+    },
+    {
+      "type": "paragraph",
+      "content": "최근 금융 및 회계 업계에서 오랜 숙원 사업으로 꼽히던 '회계기본법' 제정을 두고 다양한 논론이 이어지고 있습니다. 한쪽에서는 기업 회계의 투명성을 한 차원 높이고 그간 방치되었던 회계 사각지대를 해소하기 위해 반드시 필요한 입법이라고 주장하는 반면, 다른 한편에서는 지나친 정부 개입이 자칫 기업 자율성을 해치는 '관치 규제'로 변질될 수 있다는 우려를 제기하고 있습니다."
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "content": "회계기본법 도입의 주요 기대 효과와 필요성"
+    },
+    {
+      "type": "list",
+      "items": [
+        "기존 개별 법령에 산재해 있던 회계 관련 규율의 체계적인 통합",
+        "비영리 부문 및 사각지대에 놓인 조직들의 회계 투명성 대폭 강화",
+        "투자자 보호 및 국내 자본시장 신뢰도 제고",
+        "국제 회계 흐름과의 정합성 유지 및 정보 연결성 강화"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "content": "산업계가 우려하는 관치 규제와 부작용"
+    },
+    {
+      "type": "paragraph",
+      "content": "일각에서는 회계기본법이 신설될 경우 기업들의 행정적 부담이 가중될 뿐만 아니라, 민간 자율에 맡겨야 할 회계 실무 영역까지 지나친 정부 통제가 개입할 수 있다고 지적합니다. 특히 급변하는 비즈니스 환경 속에서 유연한 재무 전략 수립을 방해하는 요인으로 작용할 수 있다는 시각도 존재합니다."
+    },
+    {
+      "type": "warningBox",
+      "title": "주의 사항",
+      "content": "회계기본법 제정 논의는 투명성 확보와 규제 완화라는 두 가지 가치가 충돌하는 사안이므로, 향후 구체적인 입법 과정에서 기업 부담을 최소화하는 보완 장치 마련이 필수적입니다."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1611125832047-1d7ad1e8e48f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8MXx8JUVDJTk3JTg1JUVBJUIzJTg0JTIwJUVDJTg4JTk5JUVDJTlCJTkwJTIwJUVEJTlBJThDJUVBJUIzJTg0JUVBJUI4JUIwJUVCJUIzJUI4JUVCJUIyJTk1JTIwJUVDJUEwJTlDJUVDJUEwJTk1JTIwJUVCJTg1JUJDJUVCJTlFJTgwJUVBJUIzJUJDJTIwJUVEJTg4JUFDJUVCJUFBJTg1JUVDJTg0JUIxJTIwJUVBJUIwJTk1JUVEJTk5JTk0JTIwJUVCJUIwJThGJTIwJUVBJUI0JTgwJUVDJUI5JTk4JTIwJUVBJUI3JTlDJUVDJUEwJTlDJTIwJUVDJTlGJTgxJUVDJUEwJTkwJTIwJUVCJUI2JTg0JUVDJTg0JTlEJTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkxMTU3NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "black and silver calculator beside black pen",
+      "provider": "unsplash",
+      "credit": "Photo by Recha Oktaviani on Unsplash"
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1666148723250-fffd75f148dd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8Mnx8JUVDJTk3JTg1JUVBJUIzJTg0JTIwJUVDJTg4JTk5JUVDJTlCJTkwJTIwJUVEJTlBJThDJUVBJUIzJTg0JUVBJUI4JUIwJUVCJUIzJUI4JUVCJUIyJTk1JTIwJUVDJUEwJTlDJUVDJUEwJTk1JTIwJUVCJTg1JUJDJUVCJTlFJTgwJUVBJUIzJUJDJTIwJUVEJTg4JUFDJUVCJUFBJTg1JUVDJTg0JUIxJTIwJUVBJUIwJTk1JUVEJTk5JTk0JTIwJUVCJUIwJThGJTIwJUVBJUI0JTgwJUVDJUI5JTk4JTIwJUVBJUI3JTlDJUVDJUEwJTlDJTIwJUVDJTlGJTgxJUVDJUEwJTkwJTIwJUVCJUI2JTg0JUVDJTg0JTlEJTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkxMTU3NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "graphical user interface",
+      "provider": "unsplash",
+      "credit": "Photo by kenny cheng on Unsplash"
+    }
+  ],
+  "faq": [
+    {
+      "question": "회계기본법 제정이 논의되는 주된 이유는 무엇인가요?",
+      "answer": "기존 법령의 한계로 인해 발생하는 회계 사각지대를 해소하고, 전체적인 회계 투명성을 높여 국내 자본시장의 신뢰를 공고히 하기 위함입니다."
+    },
+    {
+      "question": "업계에서 우려하는 관치 규제 논란의 핵심은 무엇인가요?",
+      "answer": "정부의 과도한 개입이 기업의 자율적인 재무 의사결정을 방해하고 불필요한 행정 비용을 초래할 수 있다는 점이 핵심 우려 사항입니다."
+    }
+  ],
+  "sources": [
+    {
+      "title": "한국회계기준원 공식 공지사항",
+      "url": "https://kasb.or.kr/front/board/comm030View.do?siteCd=002000000000000&seq=25951"
+    }
+  ]
+}

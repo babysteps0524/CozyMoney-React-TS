@@ -1,0 +1,98 @@
+{
+  "id": "cozymoney-accounting-001",
+  "title": "보험업계 예보료 부담 가중과 CSM 한계론: 회계 및 자본 관리의 쟁점",
+  "description": "손보업계의 예보료 부담 논란과 함께 보험부채 할인율 및 CSM(계약서비스마진) 중심 경영의 한계를 짚어보고 회계적 과제를 살펴봅니다.",
+  "slug": "insurance-deposit-insurance-fee-csm-issues",
+  "category": "accounting",
+  "tags": [
+    "보험회계",
+    "예보료",
+    "CSM",
+    "재무관리"
+  ],
+  "keywords": [
+    "손보업계 예보료",
+    "해준금",
+    "보험부채",
+    "한국회계기준원"
+  ],
+  "date": "2026-03-30",
+  "updated": "2026-03-30",
+  "author": "CozyMoney",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1706517212966-43695534fe88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8Mnx8JUVCJUIzJUI0JUVEJTk3JTk4JUVDJTk3JTg1JUVBJUIzJTg0JTIwJUVDJTk4JTg4JUVCJUIzJUI0JUVCJUEzJThDJTIwJUVCJUI2JTgwJUVCJThCJUI0JTIwJUVBJUIwJTgwJUVDJUE0JTkxJUVBJUIzJUJDJTIwQ1NNJTIwJUVEJTk1JTlDJUVBJUIzJTg0JUVCJUExJUEwJTNBJTIwJUVEJTlBJThDJUVBJUIzJTg0JTIwJUVCJUIwJThGJTIwJUVDJTlFJTkwJUVCJUIzJUI4JTIwJUVBJUI0JTgwJUVCJUE2JUFDJUVDJTlEJTk4JTIwJUVDJTlGJTgxJUVDJUEwJTkwJTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkxMTU3Njh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "a pen sitting on top of a piece of paper",
+      "credit": "Photo by K C on Unsplash",
+      "provider": "unsplash"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1605512930578-a93be1839e4f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8M3x8JUVCJUIzJUI0JUVEJTk3JTk4JUVDJTk3JTg1JUVBJUIzJTg0JTIwJUVDJTk4JTg4JUVCJUIzJUI0JUVCJUEzJThDJTIwJUVCJUI2JTgwJUVCJThCJUI0JTIwJUVBJUIwJTgwJUVDJUE0JTkxJUVBJUIzJUJDJTIwQ1NNJTIwJUVEJTk1JTlDJUVBJUIzJTg0JUVCJUExJUEwJTNBJTIwJUVEJTlBJThDJUVBJUIzJTg0JTIwJUVCJUIwJThGJTIwJUVDJTlFJTkwJUVCJUIzJUI4JTIwJUVBJUI0JTgwJUVCJUE2JUFDJUVDJTlEJTk4JTIwJUVDJTlGJTgxJUVDJUEwJTkwJTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkxMTU3Njh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "white and black printer paper",
+      "credit": "Photo by Infrarate.com on Unsplash",
+      "provider": "unsplash"
+    }
+  ],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "보험업계 예보료 논란과 재무적 부담"
+    },
+    {
+      "type": "paragraph",
+      "text": "최근 예금보험공사 보험료(예보료) 부과 체계를 둘러싸고 손해보험업계의 강력한 반발이 이어지고 있습니다. 보험업의 특성과 리스크 구조를 충분히 반영하지 못한 제도가 보험사들의 재무 건전성에 큰 부담으로 작용하고 있다는 지적입니다."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "CSM 중심 경영의 한계와 자본 부담"
+    },
+    {
+      "type": "paragraph",
+      "text": "새로운 회계기준 도입 이후 계약서비스마진(CSM) 확보가 보험사들의 주요 지표로 자리 잡았으나, CSM 확대에만 치중할 경우 비용 및 자본 관리 측면에서 근본적인 한계에 부딪힐 수 있다는 전문가들의 진단이 나오고 있습니다."
+    },
+    {
+      "type": "list",
+      "items": [
+        "보험업 특성을 고려하지 않은 예보료 부과 방식의 문제점",
+        "해지환급금(해준금) 등 리스크 요인에 따른 당국 동향 주시",
+        "단기적 CSM 확보를 넘어선 비용 및 자본 부담의 동시 관리 필요성"
+      ]
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1706517212966-43695534fe88?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8Mnx8JUVCJUIzJUI0JUVEJTk3JTk4JUVDJTk3JTg1JUVBJUIzJTg0JTIwJUVDJTk4JTg4JUVCJUIzJUI0JUVCJUEzJThDJTIwJUVCJUI2JTgwJUVCJThCJUI0JTIwJUVBJUIwJTgwJUVDJUE0JTkxJUVBJUIzJUJDJTIwQ1NNJTIwJUVEJTk1JTlDJUVBJUIzJTg0JUVCJUExJUEwJTNBJTIwJUVEJTlBJThDJUVBJUIzJTg0JTIwJUVCJUIwJThGJTIwJUVDJTlFJTkwJUVCJUIzJUI4JTIwJUVBJUI0JTgwJUVCJUE2JUFDJUVDJTlEJTk4JTIwJUVDJTlGJTgxJUVDJUEwJTkwJTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkxMTU3Njh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "a pen sitting on top of a piece of paper",
+      "provider": "unsplash",
+      "credit": "Photo by K C on Unsplash"
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1605512930578-a93be1839e4f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8M3x8JUVCJUIzJUI0JUVEJTk3JTk4JUVDJTk3JTg1JUVBJUIzJTg0JTIwJUVDJTk4JTg4JUVCJUIzJUI0JUVCJUEzJThDJTIwJUVCJUI2JTgwJUVCJThCJUI0JTIwJUVBJUIwJTgwJUVDJUE0JTkxJUVBJUIzJUJDJTIwQ1NNJTIwJUVEJTk1JTlDJUVBJUIzJTg0JUVCJUExJUEwJTNBJTIwJUVEJTlBJThDJUVBJUIzJTg0JTIwJUVCJUIwJThGJTIwJUVDJTlFJTkwJUVCJUIzJUI4JTIwJUVBJUI0JTgwJUVCJUE2JUFDJUVDJTlEJTk4JTIwJUVDJTlGJTgxJUVDJUEwJTkwJTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkxMTU3Njh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "white and black printer paper",
+      "provider": "unsplash",
+      "credit": "Photo by Infrarate.com on Unsplash"
+    }
+  ],
+  "faq": [
+    {
+      "question": "손보업계가 예보료에 대해 반발하는 이유는 무엇인가요?",
+      "answer": "보험업의 고유한 리스크 특성과 재무적 특성이 예보료 산정 과정에 충분히 고려되지 않아 과도한 부담을 준다는 이유 때문입니다."
+    },
+    {
+      "question": "CSM 중심 경영의 한계는 무엇인가요?",
+      "answer": "계약서비스마진(CSM)의 양적 확대에만 집중할 경우, 실제 수반되는 자본 및 비용 부담을 간과하여 장기적인 재무 건전성에 부정적인 영향을 미칠 수 있습니다."
+    }
+  ],
+  "sources": [
+    {
+      "title": "예보료 날벼락에 손보업계 강력 반발..\"보험업 특성 고려해야\"",
+      "url": "https://kasb.or.kr/front/board/comm030View.do?siteCd=002000000000000&seq=25959"
+    },
+    {
+      "title": "[IRF 2026] \"CSM만 좇아선 한계…비용·자본 부담 함께 봐야\"",
+      "url": "https://kasb.or.kr/front/board/comm030View.do?siteCd=002000000000000&seq=25952"
+    }
+  ]
+}
