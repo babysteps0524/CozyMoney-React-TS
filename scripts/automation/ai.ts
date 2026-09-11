@@ -44,31 +44,38 @@ function normalizeJson(value: unknown): Record<string, any> {
 function parseJson(text: string): Record<string, any> {
   const cleaned = cleanJsonText(text);
 
+  // 1. 전체 JSON 파싱
   try {
     return normalizeJson(JSON.parse(cleaned));
   } catch {
-    const start = cleaned.indexOf("{");
-    const end = cleaned.lastIndexOf("}");
-
-    if (start >= 0 && end > start) {
-      try {
-        return normalizeJson(JSON.parse(cleaned.slice(start, end + 1)));
-      } catch {}
-    }
-
-    const arrayStart = cleaned.indexOf("[");
-    const arrayEnd = cleaned.lastIndexOf("]");
-
-    if (arrayStart >= 0 && arrayEnd > arrayStart) {
-      try {
-        return normalizeJson(
-          JSON.parse(cleaned.slice(arrayStart, arrayEnd + 1)),
-        );
-      } catch {}
-    }
-
-    throw new Error("AI 응답을 JSON으로 파싱할 수 없습니다.");
+    // 계속 진행
   }
+
+  // 2. JSON 객체만 추출
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+
+  if (start >= 0 && end > start) {
+    try {
+      return normalizeJson(JSON.parse(cleaned.slice(start, end + 1)));
+    } catch {
+      // 계속 진행
+    }
+  }
+
+  // 3. JSON 배열 추출
+  const arrayStart = cleaned.indexOf("[");
+  const arrayEnd = cleaned.lastIndexOf("]");
+
+  if (arrayStart >= 0 && arrayEnd > arrayStart) {
+    try {
+      return normalizeJson(JSON.parse(cleaned.slice(arrayStart, arrayEnd + 1)));
+    } catch {
+      // 계속 진행
+    }
+  }
+
+  throw new Error("AI 응답을 JSON으로 파싱할 수 없습니다.");
 }
 
 async function readError(response: Response): Promise<string> {
@@ -89,9 +96,11 @@ async function callGemini(
   key: string,
   prompt: string,
 ): Promise<Record<string, any>> {
-  const model = process.env.GEMINI_MODEL?.trim() || "gemini-3.5-flash-lite";
+  const model = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash-lite";
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
+  const url =
+    `https://generativelanguage.googleapis.com/v1beta/models/` +
+    `${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
 
   const response = await fetch(url, {
     method: "POST",
@@ -175,20 +184,23 @@ async function callOpenAICompatible(
 
   const body: Record<string, any> = {
     model,
+
     messages: [
       {
         role: "system",
         content:
-          "You must return exactly one valid JSON object. Never return an array. Never use Markdown code fences.",
+          "Return exactly one valid JSON object. " +
+          "Never return an array. " +
+          "Never use Markdown code fences. " +
+          "Do not add explanations before or after the JSON.",
       },
       {
         role: "user",
         content: prompt,
       },
     ],
-    response_format: {
-      type: "json_object",
-    },
+
+    temperature: 0.7,
   };
 
   const maxTokens = Number(process.env.OPENROUTER_MAX_TOKENS);

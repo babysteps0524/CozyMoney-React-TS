@@ -1,0 +1,110 @@
+{
+  "id": "tax-260911-2",
+  "title": "국세청의 역외탈세 및 민생 침해 세무조사 착수에 따른 주요 대응 방안",
+  "description": "국세청이 추진하는 역외탈세 및 민생 침해 사범에 대한 세무조사 착수 배경과 납세자가 알아야 할 주요 세무 정보 및 대응 방안을 살펴봅니다.",
+  "slug": "260911-2",
+  "category": "tax",
+  "tags": [
+    "국세청",
+    "세무조사",
+    "역외탈세",
+    "민생침해",
+    "세금"
+  ],
+  "keywords": [
+    "국세청 세무조사",
+    "역외탈세",
+    "민생침해 세무조사",
+    "세무 대응"
+  ],
+  "date": "2026-09-11",
+  "updated": "2026-09-11",
+  "author": "CozyMoney",
+  "images": [
+    {
+      "src": "https://images.pexels.com/photos/7540530/pexels-photo-7540530.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Black and white photo of Tehran Stock Exchange interior with reflections and urban cityscape.",
+      "credit": "Photo by Amir  Ghoorchiani on Pexels",
+      "provider": "pexels"
+    },
+    {
+      "src": "https://images.pexels.com/photos/8353811/pexels-photo-8353811.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Professional team in corporate attire ready for a meeting, engaged in discussion.",
+      "credit": "Photo by Kampus Production on Pexels",
+      "provider": "pexels"
+    }
+  ],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "국세청 세무조사 착수 배경"
+    },
+    {
+      "type": "paragraph",
+      "content": "국세청은 최근 국가 재정 건전성을 훼손하고 공정 경쟁을 저해하는 역외탈세 행위와 민생을 위협하는 불법 사행산업, 고액·상습 체납자 등을 대상으로 대규모 세무조사에 착수한다고 밝혔습니다. 이번 조사는 경제적 불평등을 심화시키고 사회적 책임을 회피하는 탈세 행중에 엄정 대응하기 위한 조치입니다."
+    },
+    {
+      "type": "warningBox",
+      "title": "주의사항",
+      "content": "역외탈세 및 민생 침해 혐의가 있는 경우 엄격한 세무 검증 대상이 될 수 있으므로, 관련 거래 내역과 증빙 자료를 투명하게 관리하는 것이 중요합니다."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "주요 세무조사 대상 및 특징"
+    },
+    {
+      "type": "list",
+      "items": [
+        "지능적 역외탈세: 해외 자회사 이용 소득 은닉, 변칙적 자본 거래",
+        "민생 침해 사범: 고금리 대부, 불법 사행산업, 편법적 재산 증식",
+        "고액 재산가: 변칙증여 및 사후 관리 회피 행위"
+      ]
+    },
+    {
+      "type": "image",
+      "src": "https://images.pexels.com/photos/7540530/pexels-photo-7540530.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Black and white photo of Tehran Stock Exchange interior with reflections and urban cityscape.",
+      "credit": "Photo by Amir  Ghoorchiani on Pexels",
+      "provider": "pexels"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "납세자의 올바른 세무 관리 방안"
+    },
+    {
+      "type": "paragraph",
+      "content": "기업과 납세자는 관련 세법을 철저히 준수하고, 해외 거래나 대규모 자산 변동이 발생했을 때 세무 전문가와 상담하여 적법한 신고 절차를 거쳐야 합니다. 투명한 회계 처리가 최선의 예방책입니다."
+    },
+    {
+      "type": "source",
+      "title": "조세일보",
+      "url": "http://www.joseilbo.com/news/news_read.php?class=8&uid=575541"
+    },
+    {
+      "type": "image",
+      "src": "https://images.pexels.com/photos/8353811/pexels-photo-8353811.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Professional team in corporate attire ready for a meeting, engaged in discussion.",
+      "credit": "Photo by Kampus Production on Pexels",
+      "provider": "pexels"
+    }
+  ],
+  "faq": [
+    {
+      "question": "국세청의 이번 세무조사 주요 타깃은 누구인가요?",
+      "answer": "역외탈세를 통해 소득을 해외로 빼돌리거나 불법 사행산업, 고금리 사채 등 민생을 침해하는 탈세 혐의자가 주요 대상입니다."
+    },
+    {
+      "question": "역외탈세 조사의 주요 점검 내용은 무엇인가요?",
+      "answer": "해외 자회사를 통한 소득 은닉, 변칙적 자본 거래 및 이전가격 조작 등을 집중적으로 점검합니다."
+    }
+  ],
+  "sources": [
+    {
+      "title": "조세일보",
+      "url": "http://www.joseilbo.com/news/news_read.php?class=8&uid=575541"
+    }
+  ]
+}

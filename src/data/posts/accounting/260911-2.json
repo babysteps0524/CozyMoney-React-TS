@@ -1,0 +1,106 @@
+{
+  "id": "accounting-260911-2",
+  "title": "보험업계 예금보험료 부담 논란과 회계적 특성 고려 필요성",
+  "description": "손보업계를 중심으로 예금보험료 부담 가중과 보험업 특성을 고려해야 한다는 목소리가 높아지고 있는 가운데, 관련 회계 및 제도적 쟁점을 살펴봅니다.",
+  "slug": "260911-2",
+  "category": "accounting",
+  "tags": [
+    "예금보험료",
+    "보험업회계",
+    "회계기준원",
+    "손보업계"
+  ],
+  "keywords": [
+    "예보료",
+    "손보업계",
+    "보험업 특성",
+    "회계기준원"
+  ],
+  "date": "2026-09-11",
+  "updated": "2026-09-11",
+  "author": "CozyMoney",
+  "images": [
+    {
+      "src": "https://images.pexels.com/photos/7731329/pexels-photo-7731329.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Close-up of professionals discussing a legal contract during a business meeting.",
+      "credit": "Photo by Mikhail Nilov on Pexels",
+      "provider": "pexels"
+    },
+    {
+      "src": "https://images.pexels.com/photos/35118208/pexels-photo-35118208.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Candlestick chart showing a downward trend in the stock market analysis.",
+      "credit": "Photo by Alex Luna on Pexels",
+      "provider": "pexels"
+    }
+  ],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "보험업계의 예금보험료 부담 가중 논란"
+    },
+    {
+      "type": "paragraph",
+      "content": "최근 손보업계를 중심으로 예금보험료(예보료) 부담에 대한 강력한 반발이 이어지고 있습니다. 업계에서는 일반적인 금융사와는 다른 보험업 특유의 재무적 특성과 계약 구조를 고려한 제도적 개선이 필요하다고 주장하고 있습니다."
+    },
+    {
+      "type": "infoBox",
+      "title": "핵심 포인트",
+      "content": "보험업계는 예보료 부담이 재무 건전성과 자본 관리에 미치는 영향이 크므로, 업계 특성을 반영한 세심한 제도 설계가 요구된다고 강조합니다."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "보험업 회계 및 제도적 과제"
+    },
+    {
+      "type": "paragraph",
+      "content": "보험사들은 CSM(보험계약서비스마진) 중심의 지표 관리뿐만 아니라 실제 비용과 자본 부담을 함께 면밀히 살펴야 하는 시점에 직면해 있습니다. 예보료와 같은 고정적인 비용 부담은 장기적인 재무 전략 수립에 큰 변수로 작용합니다."
+    },
+    {
+      "type": "warningBox",
+      "title": "주의사항",
+      "content": "단순한 수익성 지표나 특정 마진 지표만을 좇을 경우, 급변하는 규제 환경과 자본 부담 리스크에 적절히 대응하기 어려울 수 있습니다."
+    },
+    {
+      "type": "image",
+      "src": "https://images.pexels.com/photos/7731329/pexels-photo-7731329.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Close-up of professionals discussing a legal contract during a business meeting.",
+      "credit": "Photo by Mikhail Nilov on Pexels",
+      "provider": "pexels"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "관련 출처 정보"
+    },
+    {
+      "type": "source",
+      "title": "한국회계기준원 공식 자료",
+      "url": "https://kasb.or.kr/front/board/comm030View.do?siteCd=002000000000000&seq=25959"
+    },
+    {
+      "type": "image",
+      "src": "https://images.pexels.com/photos/35118208/pexels-photo-35118208.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Candlestick chart showing a downward trend in the stock market analysis.",
+      "credit": "Photo by Alex Luna on Pexels",
+      "provider": "pexels"
+    }
+  ],
+  "faq": [
+    {
+      "question": "손보업계가 예금보험료에 대해 반발하는 이유는 무엇인가요?",
+      "answer": "일반 금융사와 다른 보험업의 고유한 계약 특성과 재무적 구조를 충분히 반영하지 못한 채 부과되는 예보료가 자본 관리와 비용 부담을 가중시키기 때문입니다."
+    },
+    {
+      "question": "보험사들이 CSM 외에 주의해야 할 점은 무엇인가요?",
+      "answer": "CSM 지표 추구뿐만 아니라 실질적인 비용 발생 요인과 자본 건전성에 미치는 영향을 종합적으로 고려하여 리스크를 관리해야 합니다."
+    }
+  ],
+  "sources": [
+    {
+      "title": "예보료 날벼락에 손보업계 강력 반발..보험업 특성 고려해야",
+      "url": "https://kasb.or.kr/front/board/comm030View.do?siteCd=002000000000000&seq=25959"
+    }
+  ]
+}

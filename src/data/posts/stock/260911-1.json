@@ -1,0 +1,113 @@
+{
+  "id": "stock-260911-1",
+  "title": "삼성증권 단기금융업 인가로 본 발행어음 시장의 경쟁 구도와 전망",
+  "description": "금융위원회가 삼성증권에 대한 단기금융업 인가를 심의·의결하면서 발행어음 업무 영위가 가능한 종합금융투자사업자가 8개사로 확대되었습니다. 이번 인가가 가져올 자본시장과 발행어음 시장의 변화를 살펴봅니다.",
+  "slug": "260911-1",
+  "category": "stock",
+  "tags": [
+    "삼성증권",
+    "단기금융업",
+    "발행어음",
+    "종합금융투자사업자"
+  ],
+  "keywords": [
+    "삼성증권 단기금융업",
+    "발행어음 시장",
+    "종투사 인가",
+    "금융위원회"
+  ],
+  "date": "2026-09-11",
+  "updated": "2026-09-11",
+  "author": "CozyMoney",
+  "images": [
+    {
+      "src": "https://images.pexels.com/photos/7947709/pexels-photo-7947709.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Close-up of a stock report showing a financial data graph.",
+      "credit": "Photo by RDNE Stock project on Pexels",
+      "provider": "pexels"
+    },
+    {
+      "src": "https://images.pexels.com/photos/5833878/pexels-photo-5833878.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Business meeting with handshake and financial analysis displayed on a tablet.",
+      "credit": "Photo by AlphaTradeZone on Pexels",
+      "provider": "pexels"
+    }
+  ],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "삼성증권 단기금융업 인가 의의와 배경"
+    },
+    {
+      "type": "paragraph",
+      "content": "금융위원회는 정례회의를 통해 삼성증권 주식회사에 대한 단기금융업 인가를 심의 및 의결하였습니다. 이번 인가로 인해 단기금융업무 영위가 가능한 종합금융투자사업자는 총 8개사로 늘어나게 되었으며, 이를 통해 모험자본 공급 등 기업의 다양한 자금 수요에 더욱 적극적으로 대응할 수 있을 것으로 기대됩니다."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "종합금융투자사업자 및 발행어음 지정 현황"
+    },
+    {
+      "type": "paragraph",
+      "content": "국내 주요 증권사들의 종투사 지정 및 단기금융업 인가 현황은 다음과 같이 다각화되어 있으며, 이번 삼성증권의 진입으로 발행어음 시장의 경쟁과 역할이 한층 강화될 전망입니다."
+    },
+    {
+      "type": "table",
+      "headers": [
+        "구분",
+        "주요 내용"
+      ],
+      "rows": [
+        [
+          "단기금융업 인가 8개사",
+          "발행어음 업무 영위 가능 종투사 확대"
+        ],
+        [
+          "기대 효과",
+          "모험자본 공급 및 기업 자금수요 대응"
+        ]
+      ]
+    },
+    {
+      "type": "warningBox",
+      "title": "참고사항",
+      "content": "단기금융업 인가와 관련된 세부적인 법적 요건 및 심의 결과는 금융위원회 공식 보도자료를 통해 확인할 수 있습니다."
+    },
+    {
+      "type": "source",
+      "title": "금융위원회 보도자료",
+      "url": "https://www.fsc.go.kr/no010101/87676"
+    },
+    {
+      "type": "image",
+      "src": "https://images.pexels.com/photos/7947709/pexels-photo-7947709.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Close-up of a stock report showing a financial data graph.",
+      "credit": "Photo by RDNE Stock project on Pexels",
+      "provider": "pexels"
+    },
+    {
+      "type": "image",
+      "src": "https://images.pexels.com/photos/5833878/pexels-photo-5833878.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",
+      "alt": "Business meeting with handshake and financial analysis displayed on a tablet.",
+      "credit": "Photo by AlphaTradeZone on Pexels",
+      "provider": "pexels"
+    }
+  ],
+  "faq": [
+    {
+      "question": "삼성증권의 단기금융업 인가로 어떤 업무를 할 수 있나요?",
+      "answer": "발행어음 업무를 영위할 수 있게 되며, 이를 통해 기업의 다양한 자금 수요 대응 및 모험자본 공급 역할을 수행하게 됩니다."
+    },
+    {
+      "question": "현재 단기금융업무가 가능한 종투사는 총 몇 곳인가요?",
+      "answer": "삼성증권을 포함하여 총 8개사가 단기금융업무를 영위할 수 있습니다."
+    }
+  ],
+  "sources": [
+    {
+      "title": "금융위원회 보도자료",
+      "url": "https://www.fsc.go.kr/no010101/87676"
+    }
+  ]
+}

@@ -23,11 +23,20 @@ type Post = {
   sources?: any[];
 };
 
+type FeedItem = {
+  title: string;
+  url: string;
+  description?: string;
+  source: string;
+};
+
 const sources = JSON.parse(
   fs.readFileSync("src/data/automationSources.json", "utf8"),
 );
 
 const DRY_RUN = String(process.env.DRY_RUN ?? "true").toLowerCase() === "true";
+
+const MINIMUM_H2_COUNT = 5;
 
 console.log(`\n[AUTOPOST] 모드: ${DRY_RUN ? "DRY RUN" : "REAL POST"}\n`);
 
@@ -57,17 +66,69 @@ function existing(category: string): Post[] {
   return posts;
 }
 
-async function feed(category: string) {
-  const out: any[] = [];
+function getKstDate(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
 
-  for (const source of sources
+function getShortDate(date: string): string {
+  return date.replace(/-/g, "").slice(2);
+}
+
+function getNextPostNumber(category: string, date: string): number {
+  const directory = path.join(config.posts, category);
+
+  if (!fs.existsSync(directory)) {
+    return 1;
+  }
+
+  const shortDate = getShortDate(date);
+
+  const numbers: number[] = [];
+
+  const pattern = new RegExp(`^${shortDate}-(\\d+)\\.json$`);
+
+  for (const file of fs
+    .readdirSync(directory)
+    .filter((file) => file.endsWith(".json"))) {
+    const match = file.match(pattern);
+
+    if (!match) {
+      continue;
+    }
+
+    const number = Number(match[1]);
+
+    if (Number.isInteger(number) && number > 0) {
+      numbers.push(number);
+    }
+  }
+
+  if (numbers.length === 0) {
+    return 1;
+  }
+
+  return Math.max(...numbers) + 1;
+}
+
+async function feed(category: string): Promise<FeedItem[]> {
+  const out: FeedItem[] = [];
+
+  const categorySources = sources
     .filter((item: any) => item.category === category)
-    .slice(0, 8)) {
+    .slice(0, 8);
+
+  for (const source of categorySources) {
     try {
       const response = await fetch(source.url);
 
       if (!response.ok) {
         console.warn(`[WARN] RSS 요청 실패: ${source.name} ${response.status}`);
+
         continue;
       }
 
@@ -86,17 +147,19 @@ async function feed(category: string) {
         const description = item
           .match(/<description[^>]*>([\s\S]*?)<\/description>/i)?.[1]
           ?.replace(/<[^>]*>/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
+          ?.replace(/\s+/g, " ")
+          ?.trim();
 
-        if (title && url) {
-          out.push({
-            title,
-            url,
-            description,
-            source: source.name,
-          });
+        if (!title || !url) {
+          continue;
         }
+
+        out.push({
+          title,
+          url,
+          description,
+          source: source.name,
+        });
       }
     } catch (error) {
       console.warn(
@@ -106,26 +169,24 @@ async function feed(category: string) {
     }
   }
 
-  return out.slice(0, 12);
-}
+  /*
+   * 같은 URL의 중복 뉴스 제거
+   */
+  const unique = new Map<string, FeedItem>();
 
-function normalizeSlug(value: unknown): string {
-  if (typeof value !== "string") {
-    return "";
+  for (const item of out) {
+    if (!unique.has(item.url)) {
+      unique.set(item.url, item);
+    }
   }
 
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9-]/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-+|-+$/g, "");
+  return Array.from(unique.values()).slice(0, 12);
 }
 
-function createFallbackSlug(category: string): string {
-  return `${category}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-}
-
+/**
+ * AI가 잘못 생성한 Markdown table을
+ * 구조화된 table block으로 변환한다.
+ */
 function normalizeMarkdownTableSections(sections: any[]): any[] {
   const result: any[] = [];
 
@@ -146,12 +207,14 @@ function normalizeMarkdownTableSections(sections: any[]): any[] {
       continue;
     }
 
-    let lines: string[] = text
+    let lines = text
       .split(/\r?\n/)
       .map((line: string) => line.trim())
       .filter(Boolean);
 
-    // AI가 표 전체를 한 줄로 반환한 경우
+    /*
+     * AI가 한 줄로 table을 생성한 경우 대응
+     */
     if (lines.length === 1 && text.includes("| |")) {
       lines = text
         .split(/\s*\|\s*\|\s*/)
@@ -159,6 +222,7 @@ function normalizeMarkdownTableSections(sections: any[]): any[] {
         .filter(Boolean)
         .map((line: string) => {
           const value = line.startsWith("|") ? line : `| ${line}`;
+
           return value.endsWith("|") ? value : `${value} |`;
         });
     }
@@ -216,278 +280,604 @@ function normalizeMarkdownTableSections(sections: any[]): any[] {
   return result;
 }
 
-function insertImagesBetweenHeadings(sections: any[], images: any[]): any[] {
-  if (images.length !== 2) {
-    return sections;
+/**
+ * AI 응답 section을 안전한 구조로 정규화한다.
+ */
+function normalizeSections(sections: any[]): any[] {
+  return sections
+    .filter(
+      (section) =>
+        section && typeof section === "object" && !Array.isArray(section),
+    )
+    .map((section) => {
+      const normalized = {
+        ...section,
+      };
+
+      /*
+       * 기존 자동화에서 text로 생성된 경우
+       * content로 통일한다.
+       */
+      if (
+        typeof normalized.content !== "string" &&
+        typeof normalized.text === "string"
+      ) {
+        normalized.content = normalized.text;
+      }
+
+      delete normalized.text;
+
+      /*
+       * H2 ~ H4만 허용
+       */
+      if (normalized.type === "heading") {
+        let level = Number(normalized.level);
+
+        if (!Number.isFinite(level)) {
+          level = 2;
+        }
+
+        level = Math.round(level);
+
+        if (level < 2) {
+          level = 2;
+        }
+
+        if (level > 4) {
+          level = 4;
+        }
+
+        normalized.level = level;
+      }
+
+      return normalized;
+    });
+}
+
+/**
+ * sections 안에 source block이 들어온 경우 제거한다.
+ *
+ * 출처는 최상위 sources에서만 관리한다.
+ */
+function removeSectionSources(sections: any[]): any[] {
+  return sections.filter((section) => section?.type !== "source");
+}
+
+/**
+ * H2 개수를 센다.
+ */
+function countH2(sections: any[]): number {
+  return sections.filter(
+    (section) => section?.type === "heading" && Number(section.level) === 2,
+  ).length;
+}
+
+/**
+ * 이미지 2개를 H2 사이에 배치한다.
+ *
+ * 3번째 H2 이후 → 이미지 1
+ * 5번째 H2 이후 → 이미지 2
+ *
+ * H2가 5개 미만이면 에러를 발생시킨다.
+ */
+function insertImagesBetweenHeadings(sections: any[], imageList: any[]): any[] {
+  if (imageList.length !== 2) {
+    throw new Error("게시글 이미지는 정확히 2개여야 합니다.");
+  }
+
+  const h2Count = countH2(sections);
+
+  if (h2Count < MINIMUM_H2_COUNT) {
+    throw new Error(
+      `H2 섹션이 부족합니다. 현재 ${h2Count}개 / 최소 ${MINIMUM_H2_COUNT}개 필요`,
+    );
   }
 
   const result: any[] = [];
+
   let imageIndex = 0;
-  let h2Count = 0;
+  let currentH2 = 0;
 
   for (const section of sections) {
-    if (section?.type === "heading" && section.level === 2) {
-      h2Count++;
+    /*
+     * H2를 먼저 추가한다.
+     */
+    result.push(section);
 
-      // 두 번째 H2 직전에 첫 번째 이미지
-      if (h2Count === 3 && imageIndex === 0) {
+    if (section?.type === "heading" && Number(section.level) === 2) {
+      currentH2++;
+
+      /*
+       * 3번째 H2 바로 다음에 이미지 1
+       */
+      if (currentH2 === 3 && imageIndex === 0) {
         result.push({
           type: "image",
-          ...images[0],
+          ...imageList[0],
         });
 
         imageIndex++;
       }
 
-      // 네 번째 H2 직전에 두 번째 이미지
-      if (h2Count === 5 && imageIndex === 1) {
+      /*
+       * 5번째 H2 바로 다음에 이미지 2
+       */
+      if (currentH2 === 5 && imageIndex === 1) {
         result.push({
           type: "image",
-          ...images[1],
+          ...imageList[1],
         });
 
         imageIndex++;
       }
     }
-
-    result.push(section);
   }
 
-  // H2가 충분하지 않은 경우 남은 이미지는 마지막에 추가
-  while (imageIndex < images.length) {
-    result.push({
-      type: "image",
-      ...images[imageIndex],
-    });
-
-    imageIndex++;
+  if (imageIndex !== 2) {
+    throw new Error("이미지 배치에 실패했습니다.");
   }
 
   return result;
 }
 
+/**
+ * AI에게 전달할 프롬프트
+ */
 function createPrompt(
   category: string,
-  candidate: any[],
+  candidate: FeedItem[],
   usedTitles: string[],
 ): string {
+  const candidateText = candidate
+    .map(
+      (item, index) =>
+        `${index + 1}.
+제목: ${item.title}
+URL: ${item.url}
+출처: ${item.source}
+요약: ${item.description ?? ""}`,
+    )
+    .join("\n\n");
+
+  const usedTitleText =
+    usedTitles.length > 0
+      ? usedTitles
+          .slice(-50)
+          .map((title) => `- ${title}`)
+          .join("\n")
+      : "(없음)";
+
   return `
-한국어 금융 정보 전문 사이트 CozyMoney의 게시글 1개를 생성해.
+너는 한국 금융·세금·회계 전문 콘텐츠 편집자다.
 
-반드시 지켜야 할 규칙:
+아래 공식 RSS 후보를 기반으로
+"${category}" 카테고리의 정보성 블로그 글 1개를 작성한다.
 
-1. 반드시 JSON 객체 1개만 반환해.
-2. JSON 배열 []은 절대 반환하지 마.
-3. Markdown 코드블록(\`\`\`json)도 사용하지 마.
-4. HTML, JSX, CSS, UnoCSS 코드를 절대 출력하지 마.
-5. 사실을 임의로 만들어내지 말고 제공된 공식 자료를 우선 사용해.
-6. 기존 제목과 현재 생성된 제목을 절대 반복하지 마.
-7. slug는 영문 소문자, 숫자, 하이픈만 사용해.
-8. 게시글 하나만 생성해.
-9. 이미지 자체를 생성하지 마.
-10. images 필드는 반드시 빈 배열 []로 반환해.
-11. sources에는 실제 제공된 공식 자료의 URL을 사용해.
-12. 내용은 한국어로 작성해.
+중요:
+- 반드시 제공된 후보 자료를 기반으로 작성한다.
+- 제공되지 않은 사실을 임의로 만들어내지 않는다.
+- 공식 출처 URL을 그대로 사용한다.
+- 뉴스 제목을 단순 복사하지 말고 독자가 이해하기 쉽게 재구성한다.
+- 투자 권유 또는 수익 보장 표현을 사용하지 않는다.
+- 확인되지 않은 숫자나 통계를 만들어내지 않는다.
 
-category:
-${category}
+==================================================
+절대 규칙
+==================================================
 
-공식 자료:
-${JSON.stringify(candidate)}
+1. 반드시 JSON 객체 하나만 출력한다.
+2. 배열 형태로 출력하지 않는다.
+3. Markdown 코드펜스를 사용하지 않는다.
+4. JSON 앞뒤에 설명을 붙이지 않는다.
+5. id, slug, date, updated, images는 생성하지 않는다.
+6. category는 반드시 "${category}"로 한다.
+7. sections 안의 모든 본문 필드는 "content"를 사용한다.
+8. "text" 필드는 절대 사용하지 않는다.
+9. heading의 level은 반드시 2, 3, 4 중 하나만 사용한다.
+10. H1은 생성하지 않는다.
+11. FAQ는 최상위 faq 배열에만 작성한다.
+12. sources는 최상위 sources 배열에만 작성한다.
+13. sections 안에 type="source"를 생성하지 않는다.
+14. sections 안에 type="image"를 생성하지 않는다.
+15. 이미지 관련 URL을 생성하지 않는다.
+16. Markdown 링크를 사용하지 않는다.
+17. 출처 URL은 반드시 원본 URL 문자열 그대로 작성한다.
 
-이미 사용된 제목:
-${JSON.stringify(usedTitles)}
+==================================================
+본문 구조 규칙
+==================================================
 
-반드시 다음 fields를 포함하는 JSON 객체를 반환해:
+반드시 H2를 최소 5개 생성한다.
+
+권장 구조:
+
+H2 1:
+주제의 배경과 핵심 내용
+
+H2 2:
+주요 내용과 세부 사항
+
+H2 3:
+시장·세금·회계 등에 미치는 영향
+
+H2 4:
+관련 제도 또는 업계 변화
+
+H2 5:
+독자가 확인해야 할 핵심 사항
+
+필요하면 H3/H4를 추가할 수 있다.
+
+각 H2에는 충분한 설명을 작성한다.
+
+단순히 문단 몇 개와 표 하나로 끝내지 않는다.
+
+본문은 정보성 글답게 구체적으로 작성한다.
+
+==================================================
+이미지 규칙
+==================================================
+
+이미지는 절대 생성하지 않는다.
+
+이미지 블록도 생성하지 않는다.
+
+이미지는 자동화 시스템이 별도로 삽입한다.
+
+==================================================
+출처 규칙
+==================================================
+
+sources에는 실제 제공된 후보 URL만 사용한다.
+
+가능하면 글의 핵심 근거가 되는 공식 출처를 1개 이상 포함한다.
+
+임의의 URL을 만들지 않는다.
+
+==================================================
+FAQ 규칙
+==================================================
+
+FAQ는 2~4개 작성한다.
+
+질문과 답변은 본문의 핵심 내용을 반복하기보다
+독자가 실제로 궁금해할 만한 내용으로 작성한다.
+
+==================================================
+중복 제목 규칙
+==================================================
+
+아래 제목과 지나치게 유사한 제목은 사용하지 않는다.
+
+${usedTitleText}
+
+==================================================
+공식 RSS 후보
+==================================================
+
+${candidateText}
+
+==================================================
+출력 형식
+==================================================
 
 {
-  "id": "문자열",
-  "title": "게시글 제목",
-  "description": "20자 이상의 게시글 설명",
-  "slug": "영문-소문자-slug",
+  "title": "10자 이상의 제목",
+  "description": "20자 이상의 설명",
   "category": "${category}",
-  "tags": ["태그1", "태그2"],
-  "keywords": ["키워드1", "키워드2"],
-  "date": "YYYY-MM-DD",
-  "updated": "YYYY-MM-DD",
+  "tags": ["태그1", "태그2", "태그3"],
+  "keywords": ["키워드1", "키워드2", "키워드3"],
   "author": "CozyMoney",
-  "images": [],
-  "sections": [],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "content": "..."
+    },
+    {
+      "type": "paragraph",
+      "content": "..."
+    }
+  ],
   "faq": [
     {
-      "question": "질문",
-      "answer": "답변"
+      "question": "...",
+      "answer": "..."
     }
   ],
   "sources": [
     {
-      "title": "출처 제목",
-      "url": "https://example.com"
+      "title": "...",
+      "url": "https://..."
     }
   ]
 }
 
-sections에는 다음 type만 사용할 수 있어:
-
-- heading
-- paragraph
-- list
-- orderedList
-- blockquote
-- table
-- infoBox
-- warningBox
-- image
-- chart
-- faq
-- source
-
-heading을 사용하는 경우 level은 2~4만 사용해.
-
-다시 강조한다.
-
-반드시 게시글 1개에 대한 JSON 객체만 반환해.
-배열을 반환하면 안 돼.
+JSON 객체만 출력한다.
 `;
 }
 
-async function generatePost(
-  category: string,
-  candidate: any[],
-  usedTitles: Set<string>,
-): Promise<Post> {
-  const maxAttempts = 3;
+/**
+ * AI가 반환한 JSON을 파싱한다.
+ */
+function parseAiJson(raw: string): Record<string, any> {
+  let text = raw.trim();
 
-  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const prompt = createPrompt(category, candidate, Array.from(usedTitles));
+  /*
+   * 혹시 AI가 ```json ... ```으로 감싼 경우 제거
+   */
+  text = text
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
 
-    const post = await ai(prompt);
+  try {
+    const parsed = JSON.parse(text);
 
-    if (!post || typeof post !== "object" || Array.isArray(post)) {
-      throw new Error("AI 결과가 JSON 객체가 아닙니다.");
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("AI 응답이 JSON 객체가 아닙니다.");
     }
 
-    const title = typeof post.title === "string" ? post.title.trim() : "";
+    return parsed;
+  } catch {
+    /*
+     * JSON 앞뒤에 불필요한 문자가 붙은 경우
+     */
+    const start = text.indexOf("{");
+    const end = text.lastIndexOf("}");
 
-    if (!title) {
-      throw new Error("AI 결과에 제목이 없습니다.");
+    if (start === -1 || end === -1) {
+      throw new Error("AI 응답에서 JSON 객체를 찾을 수 없습니다.");
     }
 
-    if (usedTitles.has(title)) {
-      console.warn(
-        `[AI] 중복 제목 감지 → 재생성 ${attempt}/${maxAttempts}: ${title}`,
-      );
+    const extracted = text.slice(start, end + 1);
 
+    const parsed = JSON.parse(extracted);
+
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("AI 응답이 JSON 객체가 아닙니다.");
+    }
+
+    return parsed;
+  }
+}
+
+/**
+ * AI가 반환한 sources를
+ * 실제 RSS 후보 URL 기준으로 검증한다.
+ */
+function normalizeSources(postSources: any[], candidate: FeedItem[]): any[] {
+  const candidateMap = new Map(candidate.map((item) => [item.url, item]));
+
+  const result: {
+    title: string;
+    url: string;
+  }[] = [];
+
+  for (const source of postSources) {
+    if (!source || typeof source !== "object") {
       continue;
     }
 
-    post.category = category;
-    post.title = title;
+    const url = typeof source.url === "string" ? source.url.trim() : "";
 
-    if (!post.id) {
-      post.id = `${category}-${Date.now()}-${Math.random()
-        .toString(36)
-        .slice(2, 7)}`;
+    if (!url) {
+      continue;
     }
 
-    if (!post.description) {
-      post.description = `${title}에 대한 주요 내용을 정리합니다.`;
+    const original = candidateMap.get(url);
+
+    if (!original) {
+      continue;
     }
 
-    let slug = normalizeSlug(post.slug);
-
-    if (!slug) {
-      slug = createFallbackSlug(category);
+    if (result.some((item) => item.url === url)) {
+      continue;
     }
 
-    post.slug = slug;
-
-    const today = new Date().toISOString().slice(0, 10);
-
-    post.date = post.date || today;
-    post.updated = post.updated || post.date;
-    post.author = "CozyMoney";
-
-    if (!Array.isArray(post.tags)) {
-      post.tags = [];
-    }
-
-    if (!Array.isArray(post.keywords)) {
-      post.keywords = [];
-    }
-
-    if (!Array.isArray(post.sections)) {
-      post.sections = [];
-    }
-
-    post.sections = normalizeMarkdownTableSections(post.sections);
-
-    if (!Array.isArray(post.faq)) {
-      post.faq = [];
-    }
-
-    if (!Array.isArray(post.sources)) {
-      post.sources = [];
-    }
-
-    return post;
+    result.push({
+      title:
+        typeof source.title === "string" && source.title.trim()
+          ? source.title.trim()
+          : original.source,
+      url,
+    });
   }
 
-  throw new Error("중복 제목으로 인해 게시글 생성 실패");
+  /*
+   * AI가 source를 누락한 경우
+   * 실제 후보 중 첫 번째를 보완한다.
+   */
+  if (result.length === 0) {
+    const first = candidate[0];
+
+    if (first) {
+      result.push({
+        title: first.source,
+        url: first.url,
+      });
+    }
+  }
+
+  return result;
 }
 
-async function publishPost(
+/**
+ * 게시글 1개 생성
+ */
+async function generatePost(
   category: string,
-  number: number,
-  candidate: any[],
-  usedTitles: Set<string>,
-) {
-  console.log(`\n[POST] ${category} ${number}/${config.perCategory}`);
-
-  const post = await generatePost(category, candidate, usedTitles);
-
-  console.log(`[AI] 생성 완료: ${post.title}`);
-
-  post.images = await images(post.title!);
-
-  if (!Array.isArray(post.images) || post.images.length !== 2) {
-    throw new Error("이미지 2개 확보 실패");
-  }
-
-  post.sections = insertImagesBetweenHeadings(
-    Array.isArray(post.sections) ? post.sections : [],
-    post.images,
-  );
-
-  const validation = postSchema.safeParse(post);
-
-  if (!validation.success) {
-    const message = validation.error.issues
-      .map((issue) => `${issue.path.join(".") || "root"}: ${issue.message}`)
-      .join(", ");
-
-    throw new Error(message);
-  }
+  candidate: FeedItem[],
+  usedTitles: string[],
+): Promise<Post> {
+  let lastError: unknown = null;
 
   /*
-   * ============================================================
-   * DRY RUN
-   * ============================================================
+   * 중복 제목 또는 구조 문제가 발생하면
+   * 최대 3번까지 AI를 다시 호출한다.
    */
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      console.log(`[AI] ${category} 글 생성 ${attempt}/3`);
 
-  if (DRY_RUN) {
-    console.log(`[DRY RUN] 저장하지 않음: ${post.title}`);
+      const prompt = createPrompt(category, candidate, usedTitles);
 
-    usedTitles.add(post.title!);
+      const raw = await ai(prompt);
 
-    return;
+      const data = parseAiJson(raw);
+
+      /*
+       * 기본 필드
+       */
+      const post: Post = {
+        ...data,
+
+        category,
+
+        date: getKstDate(),
+
+        updated: getKstDate(),
+
+        author:
+          typeof data.author === "string" && data.author.trim()
+            ? data.author.trim()
+            : "CozyMoney",
+
+        tags: Array.isArray(data.tags) ? data.tags : [],
+
+        keywords: Array.isArray(data.keywords) ? data.keywords : [],
+
+        faq: Array.isArray(data.faq) ? data.faq : [],
+
+        sources: Array.isArray(data.sources) ? data.sources : [],
+      };
+
+      /*
+       * AI가 생성하면 안 되는 값 제거
+       */
+      delete post.id;
+      delete post.slug;
+      delete post.images;
+
+      /*
+       * sections 정규화
+       */
+      let sections = Array.isArray(data.sections)
+        ? normalizeSections(data.sections)
+        : [];
+
+      /*
+       * source block 제거
+       */
+      sections = removeSectionSources(sections);
+
+      /*
+       * Markdown table 변환
+       */
+      sections = normalizeMarkdownTableSections(sections);
+
+      /*
+       * H2 최소 개수 검사
+       */
+      const h2Count = countH2(sections);
+
+      if (h2Count < MINIMUM_H2_COUNT) {
+        throw new Error(
+          `H2 섹션 부족: ${h2Count}개 / 최소 ${MINIMUM_H2_COUNT}개`,
+        );
+      }
+
+      post.sections = sections;
+
+      /*
+       * source URL을 실제 후보 기준으로 제한
+       */
+      post.sources = normalizeSources(post.sources ?? [], candidate);
+
+      /*
+       * 제목 중복 검사
+       */
+      const title = typeof post.title === "string" ? post.title.trim() : "";
+
+      if (!title) {
+        throw new Error("게시글 제목이 없습니다.");
+      }
+
+      const duplicate = usedTitles.some(
+        (usedTitle) => usedTitle.trim() === title,
+      );
+
+      if (duplicate) {
+        throw new Error(`중복 제목: ${title}`);
+      }
+
+      /*
+       * 제목을 사용 목록에 추가
+       */
+      usedTitles.push(title);
+
+      /*
+       * 이미지 생성
+       */
+      const imageList = await images(title);
+
+      if (imageList.length !== 2) {
+        throw new Error(
+          `이미지는 정확히 2개여야 합니다. 현재 ${imageList.length}개`,
+        );
+      }
+
+      post.images = imageList;
+
+      /*
+       * H2 사이에 이미지 삽입
+       */
+      post.sections = insertImagesBetweenHeadings(post.sections, imageList);
+
+      /*
+       * 최종 Schema 검증
+       */
+      const validation = postSchema.safeParse(post);
+
+      if (!validation.success) {
+        console.error("[VALIDATION ERROR]", validation.error.flatten());
+
+        throw new Error("게시글 Schema 검증 실패");
+      }
+
+      return post;
+    } catch (error) {
+      lastError = error;
+
+      console.warn(
+        `[AI] ${category} 글 생성 실패 ${attempt}/3:`,
+        error instanceof Error ? error.message : String(error),
+      );
+    }
   }
 
-  /*
-   * ============================================================
-   * REAL POST
-   * ============================================================
-   */
+  throw lastError instanceof Error
+    ? lastError
+    : new Error(`${category} 게시글 생성 실패`);
+}
+
+/**
+ * 게시글 저장
+ */
+async function publishPost(category: string, post: Post): Promise<void> {
+  const date = getKstDate();
+
+  const number = getNextPostNumber(category, date);
+
+  const slug = `${getShortDate(date)}-${number}`;
+
+  post.id = `${category}-${slug}`;
+
+  post.slug = slug;
+
+  post.date = date;
+  post.updated = date;
 
   const directory = path.join(config.posts, category);
 
@@ -495,56 +885,100 @@ async function publishPost(
     recursive: true,
   });
 
-  let filename = `${post.slug}.json`;
-  let filepath = path.join(directory, filename);
+  const filePath = path.join(directory, `${slug}.json`);
 
-  if (fs.existsSync(filepath)) {
-    filename = `${post.slug}-${Date.now()}.json`;
-    filepath = path.join(directory, filename);
+  if (DRY_RUN) {
+    console.log(`[DRY RUN] ${category}: ${post.title}`);
+
+    console.log(`[FILE] ${filePath}`);
+
+    console.log(`[URL] /${category}/${slug}/`);
+
+    return;
   }
 
-  fs.writeFileSync(filepath, JSON.stringify(validation.data, null, 2), "utf8");
-
-  usedTitles.add(post.title!);
+  fs.writeFileSync(filePath, JSON.stringify(post, null, 2), "utf8");
 
   console.log(`[PUBLISHED] ${category}: ${post.title}`);
-  console.log(`[FILE] ${filepath}`);
+
+  console.log(`[FILE] ${filePath}`);
+
+  console.log(`[URL] /${category}/${slug}/`);
 }
 
-async function main() {
-  console.log(`[AUTOPOST] ${DRY_RUN ? "DRY RUN" : "REAL POST"} 시작`);
+/**
+ * 메인 자동화
+ */
+async function main(): Promise<void> {
+  console.log("[AUTOPOST] 자동 포스팅 작업을 시작합니다.");
+
+  if (DRY_RUN) {
+    console.log("[AUTOPOST] DRY RUN 모드입니다.");
+  } else {
+    console.log("[AUTOPOST] REAL POST 모드입니다.");
+  }
 
   for (const category of config.categories) {
-    const old = existing(category);
+    console.log(`\n[CATEGORY] ${category}`);
 
-    const usedTitles = new Set(
-      old
-        .map((post) => post.title)
-        .filter(
-          (title): title is string =>
-            typeof title === "string" && title.trim().length > 0,
-        ),
-    );
+    /*
+     * 기존 게시글 제목
+     */
+    const existingPosts = existing(category);
 
-    const candidate = await feed(category);
+    const usedTitles = existingPosts
+      .map((post) => post.title?.trim())
+      .filter((title): title is string => Boolean(title));
 
-    if (candidate.length === 0) {
-      console.warn(`[WARN] ${category}: 사용할 RSS 자료가 없습니다.`);
+    /*
+     * RSS 후보
+     */
+    const candidates = await feed(category);
+
+    console.log(`[RSS] ${category}: ${candidates.length}개 후보`);
+
+    /*
+     * 후보가 없으면 AI 생성하지 않는다.
+     */
+    if (candidates.length === 0) {
+      console.warn(`[SKIP] ${category}: 공식 RSS 후보가 없습니다.`);
+
+      continue;
     }
 
-    for (let number = 1; number <= config.perCategory; number++) {
+    /*
+     * 카테고리별 최대 2개
+     */
+    for (let index = 0; index < config.perCategory; index++) {
+      console.log(`\n[POST] ${category} ${index + 1}/${config.perCategory}`);
+
       try {
-        await publishPost(category, number, candidate, usedTitles);
+        /*
+         * 매번 현재 제목 목록을 기준으로 생성
+         */
+        const post = await generatePost(category, candidates, usedTitles);
+
+        await publishPost(category, post);
       } catch (error) {
-        console.warn(
-          `[FAILED] ${category} ${number}`,
+        /*
+         * 한 게시글 실패가
+         * 전체 카테고리/전체 자동화를 중단시키지 않는다.
+         */
+        console.error(
+          `[ERROR] ${category} ${index + 1}번 게시글 실패:`,
           error instanceof Error ? error.message : String(error),
         );
+
+        continue;
       }
     }
   }
 
-  console.log(`\n[AUTOPOST] ${DRY_RUN ? "DRY RUN" : "REAL POST"} 완료`);
+  console.log("\n[AUTOPOST] 자동 포스팅 작업 완료");
 }
 
-await main();
+main().catch((error) => {
+  console.error("[FATAL]", error);
+
+  process.exit(1);
+});

@@ -1,20 +1,36 @@
 import type { ContentBlock } from "../../types/content";
 
-const clean = (v: unknown) => {
-  if (typeof v !== "string") {
+/**
+ * ============================================================
+ * 텍스트 정리
+ * ============================================================
+ */
+
+const clean = (value: unknown): string => {
+  if (typeof value !== "string") {
     return "";
   }
 
-  return v.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\[(.*?)\]\((.*?)\)/g, "$1");
+  return value
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\[(.*?)\]\((.*?)\)/g, "$1")
+    .trim();
 };
 
-function parseMarkdownTable(content: string): {
+/**
+ * ============================================================
+ * Markdown Table 파싱
+ * ============================================================
+ */
+
+function parseMarkdownTable(content: unknown): {
   headers: string[];
   rows: string[][];
 } | null {
   if (typeof content !== "string") {
     return null;
   }
+
   const text = content.trim();
 
   if (!text.includes("|")) {
@@ -26,13 +42,8 @@ function parseMarkdownTable(content: string): {
     .map((line) => line.trim())
     .filter(Boolean);
 
-  /*
-   * AI가 Markdown 표를 한 줄로 만들어 버리는 경우 처리.
-   *
-   * 예:
-   * | A | B | C | | :--- | :--- | :--- | | 1 | 2 | 3 |
-   *
-   * 행 사이의 "| |"을 줄바꿈으로 변환한다.
+  /**
+   * AI가 Markdown 표를 한 줄로 만들어 버리는 경우
    */
   if (lines.length === 1 && text.includes("| |")) {
     lines = text
@@ -41,6 +52,7 @@ function parseMarkdownTable(content: string): {
       .filter(Boolean)
       .map((line) => {
         const value = line.startsWith("|") ? line : `| ${line}`;
+
         return value.endsWith("|") ? value : `${value} |`;
       });
   }
@@ -52,7 +64,7 @@ function parseMarkdownTable(content: string): {
   const parseRow = (line: string): string[] => {
     const value = line.trim().replace(/^\|/, "").replace(/\|$/, "");
 
-    return value.split("|").map((cell) => clean(cell.trim()));
+    return value.split("|").map((cell) => clean(cell));
   };
 
   const headers = parseRow(lines[0]);
@@ -61,7 +73,9 @@ function parseMarkdownTable(content: string): {
     return null;
   }
 
-  // Markdown 구분선 확인
+  /**
+   * Markdown 구분선 확인
+   */
   const separator = parseRow(lines[1]);
 
   const isSeparator =
@@ -96,53 +110,73 @@ function parseMarkdownTable(content: string): {
   };
 }
 
+/**
+ * ============================================================
+ * Article Renderer
+ * ============================================================
+ */
+
 export function ArticleRenderer({ sections }: { sections: ContentBlock[] }) {
   return (
     <div className="text-[15.5px] md:text-base leading-8 break-words">
-      {sections.map((b, i) => {
-        if (b.type === "heading") {
-          if (b.level === 1) {
-            return null;
-          }
+      {sections.map((block, index) => {
+        /**
+         * ------------------------------------------------------
+         * Heading
+         * ------------------------------------------------------
+         */
 
-          const T: any = `h${b.level}`;
+        if (block.type === "heading") {
+          const Tag = `h${block.level}` as "h2" | "h3" | "h4";
 
           return (
-            <T
-              key={i}
-              className="mt-9 mb-4 text-2xl md:text-3xl font-900 text-cm-primary scroll-mt-24"
+            <Tag
+              key={index}
+              className={
+                block.level === 2
+                  ? "mt-9 mb-4 text-2xl md:text-3xl font-900 text-cm-primary scroll-mt-24"
+                  : block.level === 3
+                    ? "mt-7 mb-3 text-xl md:text-2xl font-800 text-cm-primary scroll-mt-24"
+                    : "mt-6 mb-3 text-lg md:text-xl font-800 text-cm-primary scroll-mt-24"
+              }
             >
-              {clean(b.content)}
-            </T>
+              {clean(block.content)}
+            </Tag>
           );
         }
 
-        if (b.type === "paragraph") {
-          const table = parseMarkdownTable(b.content);
+        /**
+         * ------------------------------------------------------
+         * Paragraph
+         * ------------------------------------------------------
+         */
+
+        if (block.type === "paragraph") {
+          const table = parseMarkdownTable(block.content);
 
           if (table) {
             return (
-              <div key={i} className="my-6 overflow-x-auto">
+              <div key={index} className="my-6 overflow-x-auto">
                 <table className="w-full min-w-120 border-collapse text-sm">
                   <thead>
                     <tr>
-                      {table.headers.map((x, j) => (
+                      {table.headers.map((header, headerIndex) => (
                         <th
-                          key={j}
+                          key={headerIndex}
                           className="border border-cm-line bg-cm-surface2 p-3 text-left font-800"
                         >
-                          {x}
+                          {header}
                         </th>
                       ))}
                     </tr>
                   </thead>
 
                   <tbody>
-                    {table.rows.map((row, j) => (
-                      <tr key={j}>
-                        {row.map((cell, k) => (
+                    {table.rows.map((row, rowIndex) => (
+                      <tr key={rowIndex}>
+                        {row.map((cell, cellIndex) => (
                           <td
-                            key={k}
+                            key={cellIndex}
                             className="border border-cm-line p-3 align-top"
                           >
                             {cell}
@@ -157,79 +191,108 @@ export function ArticleRenderer({ sections }: { sections: ContentBlock[] }) {
           }
 
           return (
-            <p key={i} className="m-0 mb-5">
-              {clean(b.content)}
+            <p key={index} className="m-0 mb-5">
+              {clean(block.content)}
             </p>
           );
         }
 
-        if (b.type === "list" || b.type === "orderedList") {
-          const T = b.type === "list" ? "ul" : "ol";
+        /**
+         * ------------------------------------------------------
+         * List / Ordered List
+         * ------------------------------------------------------
+         */
+
+        if (block.type === "list" || block.type === "orderedList") {
+          const Tag = block.type === "list" ? "ul" : "ol";
 
           return (
-            <T
-              key={i}
+            <Tag
+              key={index}
               className={`mb-5 pl-6 ${
-                b.type === "list" ? "list-disc" : "list-decimal"
+                block.type === "list" ? "list-disc" : "list-decimal"
               }`}
             >
-              {b.items.map((x, j) => (
-                <li key={j}>{clean(x)}</li>
+              {block.items.map((item, itemIndex) => (
+                <li key={itemIndex}>{clean(item)}</li>
               ))}
-            </T>
+            </Tag>
           );
         }
 
-        if (b.type === "blockquote") {
+        /**
+         * ------------------------------------------------------
+         * Blockquote
+         * ------------------------------------------------------
+         */
+
+        if (block.type === "blockquote") {
           return (
             <blockquote
-              key={i}
+              key={index}
               className="my-6 border-l-4 border-cm-accent bg-cm-surface2 px-4 py-3 text-cm-muted"
             >
-              {clean(b.content)}
+              {clean(block.content)}
             </blockquote>
           );
         }
 
-        if (b.type === "infoBox" || b.type === "warningBox") {
+        /**
+         * ------------------------------------------------------
+         * Info / Warning Box
+         * ------------------------------------------------------
+         */
+
+        if (block.type === "infoBox" || block.type === "warningBox") {
           return (
             <aside
-              key={i}
+              key={index}
               className="my-6 rounded-2xl border border-cm-line bg-cm-surface2 p-4"
             >
-              <strong className="block mb-1">{b.title || "알아두기"}</strong>
+              <strong className="block mb-1">
+                {clean(
+                  block.title ||
+                    (block.type === "warningBox" ? "주의사항" : "알아두기"),
+                )}
+              </strong>
 
-              {clean(b.content)}
+              <div>{clean(block.content)}</div>
             </aside>
           );
         }
 
-        if (b.type === "table") {
+        /**
+         * ------------------------------------------------------
+         * Table
+         * ------------------------------------------------------
+         */
+
+        if (block.type === "table") {
           return (
-            <div key={i} className="my-6 overflow-x-auto">
+            <div key={index} className="my-6 overflow-x-auto">
               <table className="w-full min-w-120 border-collapse text-sm">
                 <thead>
                   <tr>
-                    {b.headers.map((x, j) => (
+                    {block.headers.map((header, headerIndex) => (
                       <th
-                        key={j}
+                        key={headerIndex}
                         className="border border-cm-line bg-cm-surface2 p-3 text-left font-800"
                       >
-                        {clean(x)}
+                        {clean(header)}
                       </th>
                     ))}
                   </tr>
                 </thead>
 
                 <tbody>
-                  {b.rows.map((r, j) => (
-                    <tr key={j}>
-                      {r.map((x, k) => (
+                  {block.rows.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {row.map((cell, cellIndex) => (
                         <td
-                          key={k}
+                          key={cellIndex}
                           className="border border-cm-line p-3 align-top"
                         >
-                          {clean(x)}
+                          {clean(cell)}
                         </td>
                       ))}
                     </tr>
@@ -240,12 +303,18 @@ export function ArticleRenderer({ sections }: { sections: ContentBlock[] }) {
           );
         }
 
-        if (b.type === "image") {
+        /**
+         * ------------------------------------------------------
+         * Image
+         * ------------------------------------------------------
+         */
+
+        if (block.type === "image") {
           return (
-            <figure key={i} className="block w-full clear-both my-8">
+            <figure key={index} className="block w-full clear-both my-8">
               <img
-                src={b.src}
-                alt={b.alt}
+                src={block.src}
+                alt={clean(block.alt)}
                 width="1200"
                 height="675"
                 loading="lazy"
@@ -253,43 +322,23 @@ export function ArticleRenderer({ sections }: { sections: ContentBlock[] }) {
                 className="block w-full max-w-full aspect-video object-cover rounded-2xl"
               />
 
-              {b.credit && (
+              {block.credit && (
                 <figcaption className="block mt-2 text-xs text-cm-muted">
-                  {b.credit}
+                  {clean(block.credit)}
                 </figcaption>
               )}
             </figure>
           );
         }
 
-        if (b.type === "faq") {
-          return (
-            <details
-              key={i}
-              className="my-3 rounded-xl border border-cm-line p-4"
-            >
-              <summary className="cursor-pointer font-800">
-                {clean(b.question)}
-              </summary>
-
-              <p className="mt-3 mb-0 text-cm-muted">{clean(b.answer)}</p>
-            </details>
-          );
-        }
-
-        if (b.type === "source") {
-          return (
-            <p key={i} className="text-sm">
-              <a
-                href={b.url}
-                rel="noopener noreferrer"
-                className="underline text-cm-primary break-all"
-              >
-                {clean(b.title)}
-              </a>
-            </p>
-          );
-        }
+        /**
+         * ------------------------------------------------------
+         * FAQ / Source
+         *
+         * FAQ와 Source는 이제 최상위 Post 데이터에서
+         * 관리하므로 여기서는 렌더링하지 않는다.
+         * ------------------------------------------------------
+         */
 
         return null;
       })}
