@@ -1,0 +1,101 @@
+{
+  "id": "tax-refund-delayed-refunds",
+  "title": "환급 200일 넘었어도 세무서가 잘못 뽑은 탓... '정당한 가산금'",
+  "description": "국세 환급금이 200일이 넘도록 지급되지 않은 경우, 세무서의 과오로 인한 지연이라면 정당한 가산금을 받을 수 있는지 관련 규정과 내용을 확인해 드립니다.",
+  "slug": "tax-refund-delayed-refunds",
+  "category": "tax",
+  "tags": [
+    "국세환급금",
+    "가산금",
+    "세무서과오",
+    "환급지연",
+    "조세일보"
+  ],
+  "keywords": [
+    "국세환급",
+    "환급가산금",
+    "세무서잘못",
+    "환급금지연"
+  ],
+  "date": "2023-10-25",
+  "updated": "2023-10-25",
+  "author": "CozyMoney",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1662901089080-62a718448579?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8MXx8JUVEJTk5JTk4JUVBJUI4JTg5JTIwMjAwJUVDJTlEJUJDJTIwJUVCJTg0JTk4JUVDJTk3JTg4JUVDJTk2JUI0JUVCJThGJTg0JTIwJUVDJTg0JUI4JUVCJUFDJUI0JUVDJTg0JTlDJUVBJUIwJTgwJTIwJUVDJTlFJTk4JUVCJUFBJUJCJTIwJUVCJUJEJTkxJUVDJTlEJTgwJTIwJUVEJTgzJTkzLi4uJTIwJTI3JUVDJUEwJTk1JUVCJThCJUI5JUVEJTk1JTlDJTIwJUVBJUIwJTgwJUVDJTgyJUIwJUVBJUI4JTg4JTI3JTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkwOTE3MTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "a group of statues on the ground",
+      "credit": "Photo by martin bennie on Unsplash",
+      "provider": "unsplash"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1657437059028-c89a94aedc61?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8Mnx8JUVEJTk5JTk4JUVBJUI4JTg5JTIwMjAwJUVDJTlEJUJDJTIwJUVCJTg0JTk4JUVDJTk3JTg4JUVDJTk2JUI0JUVCJThGJTg0JTIwJUVDJTg0JUI4JUVCJUFDJUI0JUVDJTg0JTlDJUVBJUIwJTgwJTIwJUVDJTlFJTk4JUVCJUFBJUJCJTIwJUVCJUJEJTkxJUVDJTlEJTgwJTIwJUVEJTgzJTkzLi4uJTIwJTI3JUVDJUEwJTk1JUVCJThCJUI5JUVEJTk1JTlDJTIwJUVBJUIwJTgwJUVDJTgyJUIwJUVBJUI4JTg4JTI3JTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkwOTE3MTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "diagram",
+      "credit": "Photo by sofia kang on Unsplash",
+      "provider": "unsplash"
+    }
+  ],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "국세 환급금 지연과 가산금 지급 기준"
+    },
+    {
+      "type": "paragraph",
+      "text": "세금을 납부한 후 돌려받아야 하는 국세 환급금이 여러 이유로 지연되는 경우가 발생할 수 있습니다. 특히 환급이 수백 일 이상 늦어진 경우, 그 원인이 세무서의 착오나 과오 때문이라면 납세자는 이에 대한 정당한 가산금을 요구할 수 있습니다."
+    },
+    {
+      "type": "warningBox",
+      "title": "주의사항",
+      "text": "환급 지연에 대한 가산금은 모든 상황에서 일률적으로 적용되지 않으며, 지연 원인과 책임 소재에 따라 세부적인 산정 기준이 달라질 수 있으므로 개별 사안을 꼼꼼히 확인해야 합니다."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "주요 내용 및 확인 사항"
+    },
+    {
+      "type": "list",
+      "items": [
+        "환급금 지급이 200일 이상 장기화된 사례 확인",
+        "지연의 귀책 사유가 과세관청(세무서)에 있는지 여부 분석",
+        "세무서의 행정 착오로 인한 경우 정당한 환급가산금 청구 가능성 검토"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "납세자가 알아두어야 할 대응 방안"
+    },
+    {
+      "type": "paragraph",
+      "text": "국세 환급과 관련하여 예상보다 장기간 지연이 발생한다면 관할 세무서를 통해 정확한 지연 사유를 파악하고, 과세관청의 과오로 인한 지연일 경우 관련 법령에 따른 가산금이 제대로 반영되었는지 반드시 따져봐야 합니다."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1662901089080-62a718448579?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8MXx8JUVEJTk5JTk4JUVBJUI4JTg5JTIwMjAwJUVDJTlEJUJDJTIwJUVCJTg0JTk4JUVDJTk3JTg4JUVDJTk2JUI0JUVCJThGJTg0JTIwJUVDJTg0JUI4JUVCJUFDJUI0JUVDJTg0JTlDJUVBJUIwJTgwJTIwJUVDJTlFJTk4JUVCJUFBJUJCJTIwJUVCJUJEJTkxJUVDJTlEJTgwJTIwJUVEJTgzJTkzLi4uJTIwJTI3JUVDJUEwJTk1JUVCJThCJUI5JUVEJTk1JTlDJTIwJUVBJUIwJTgwJUVDJTgyJUIwJUVBJUI4JTg4JTI3JTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkwOTE3MTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "a group of statues on the ground",
+      "provider": "unsplash",
+      "credit": "Photo by martin bennie on Unsplash"
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1657437059028-c89a94aedc61?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8Mnx8JUVEJTk5JTk4JUVBJUI4JTg5JTIwMjAwJUVDJTlEJUJDJTIwJUVCJTg0JTk4JUVDJTk3JTg4JUVDJTk2JUI0JUVCJThGJTg0JTIwJUVDJTg0JUI4JUVCJUFDJUI0JUVDJTg0JTlDJUVBJUIwJTgwJTIwJUVDJTlFJTk4JUVCJUFBJUJCJTIwJUVCJUJEJTkxJUVDJTlEJTgwJTIwJUVEJTgzJTkzLi4uJTIwJTI3JUVDJUEwJTk1JUVCJThCJUI5JUVEJTk1JTlDJTIwJUVBJUIwJTgwJUVDJTgyJUIwJUVBJUI4JTg4JTI3JTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkwOTE3MTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "diagram",
+      "provider": "unsplash",
+      "credit": "Photo by sofia kang on Unsplash"
+    }
+  ],
+  "faq": [
+    {
+      "question": "국세 환급금이 늦어지면 무조건 가산금을 받을 수 있나요?",
+      "answer": "아닙니다. 지연된 원인이 납세자의 서류 제출 지연이나 오류에 기인한 것이라면 가산금이 지급되지 않을 수 있으며, 세무서의 착오 등 과세관청의 귀책 사유가 명확해야 환급가산금이 정상적으로 지급됩니다."
+    }
+  ],
+  "sources": [
+    {
+      "title": "조세일보",
+      "url": "http://www.joseilbo.com/news/news_read.php?class=18&uid=575485"
+    }
+  ]
+}

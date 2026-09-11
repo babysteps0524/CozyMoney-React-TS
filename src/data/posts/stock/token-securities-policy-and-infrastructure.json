@@ -1,0 +1,134 @@
+{
+  "id": "cozymoney-stock-2026-09-token-securities-policy",
+  "title": "토큰증권(ST) 제도화 본격 추진: 발행 인프라 단계별 구축과 조각투자 모범규준",
+  "description": "금융위원회가 발표한 토큰증권 정책방향에 따라 조각투자를 넘어 주식, 채권, 펀드 등 모든 증권의 토큰증권 발행 인프라 구축과 단계별 로드맵 및 모범규준 주요 내용을 알아봅니다.",
+  "slug": "token-securities-policy-and-infrastructure",
+  "category": "stock",
+  "tags": [
+    "토큰증권",
+    "전자증권법",
+    "조각투자",
+    "자본시장",
+    "금융위원회"
+  ],
+  "keywords": [
+    "토큰증권 정책방향",
+    "분산원장",
+    "발행인 계좌관리기관",
+    "장외거래소",
+    "비금전신탁 수익증권"
+  ],
+  "date": "2026-09-12",
+  "updated": "2026-09-12",
+  "author": "CozyMoney",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1641025753993-6e5328a7e2d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8M3x8JUVEJTg2JUEwJUVEJTgxJUIwJUVDJUE2JTlEJUVBJUI2JThDJTI4U1QlMjklMjAlRUMlQTAlOUMlRUIlOEYlODQlRUQlOTklOTQlMjAlRUIlQjMlQjglRUElQjIlQTklMjAlRUMlQjYlOTQlRUMlQTclODQlM0ElMjAlRUIlQjAlOUMlRUQlOTYlODklMjAlRUMlOUQlQjglRUQlOTQlODQlRUIlOUQlQkMlMjAlRUIlOEIlQTglRUElQjMlODQlRUIlQjMlODQlMjAlRUElQjUlQUMlRUMlQjYlOTUlRUElQjMlQkMlMjAlRUMlQTElQjAlRUElQjAlODElRUQlODglQUMlRUMlOUUlOTAlMjAlRUIlQUElQTglRUIlQjIlOTQlRUElQjclOUMlRUMlQTQlODAlMjBmaW5hbmNlJTIwbm8lMjBwZW9wbGV8ZW58MHwwfHx8MTc4OTA5MTcwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "a white wall with a sign that says please touch",
+      "credit": "Photo by Suzi Kim on Unsplash",
+      "provider": "unsplash"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1547561769-08a6b502bdaa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8NHx8JUVEJTg2JUEwJUVEJTgxJUIwJUVDJUE2JTlEJUVBJUI2JThDJTI4U1QlMjklMjAlRUMlQTAlOUMlRUIlOEYlODQlRUQlOTklOTQlMjAlRUIlQjMlQjglRUElQjIlQTklMjAlRUMlQjYlOTQlRUMlQTclODQlM0ElMjAlRUIlQjAlOUMlRUQlOTYlODklMjAlRUMlOUQlQjglRUQlOTQlODQlRUIlOUQlQkMlMjAlRUIlOEIlQTglRUElQjMlODQlRUIlQjMlODQlMjAlRUElQjUlQUMlRUMlQjYlOTUlRUElQjMlQkMlMjAlRUMlQTElQjAlRUElQjAlODElRUQlODglQUMlRUMlOUUlOTAlMjAlRUIlQUElQTglRUIlQjIlOTQlRUElQjclOUMlRUMlQTQlODAlMjBmaW5hbmNlJTIwbm8lMjBwZW9wbGV8ZW58MHwwfHx8MTc4OTA5MTcwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "white and purple cardboard box",
+      "credit": "Photo by Ra Dragon on Unsplash",
+      "provider": "unsplash"
+    }
+  ],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "토큰증권(ST) 정책방향 개요: 조각투자를 넘어 모든 증권의 토큰화로"
+    },
+    {
+      "type": "paragraph",
+      "text": "금융위원회는 민·관 합동 토큰증권 협의체 3차 회의를 개최하고 그간의 논의 결과를 종합한 '토큰증권 정책방향'을 공개했습니다. 이번 정책은 기존에 신종·비정형증권인 조각투자를 중심으로 논의되던 토큰증권 범위를 넘어, 주식·채권·펀드 등 기존 정형증권의 토큰화까지 아우르는 종합적인 디지털 자본시장 인프라 구축을 목표로 하고 있습니다."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "토큰증권 발행 인프라의 단계별 구축 로드맵"
+    },
+    {
+      "type": "paragraph",
+      "text": "내년 2월 4일 시행 예정인 개정 전자증권법에 발맞추어, 토큰증권 발행 및 유통을 위한 인프라는 안정성과 혁신의 조화를 위해 단계별로 구축됩니다."
+    },
+    {
+      "type": "list",
+      "items": [
+        "1단계 ('27.2월 법 시행시): 펀드 및 채권은 기관투자자 전용 사모 MMF 및 사채의 토큰화, 주식은 신탁방식을 이용한 비상장주식 토큰화 우선 추진. 상대적으로 권리관계가 단순한 공모 조각투자증권 토큰화 허용",
+        "2단계: 1단계의 안정성과 효율성, 시장 수요를 점검하며 공모 증권 토큰화 등으로 인프라 확충",
+        "3단계: 스테이블코인 등을 결제수단으로 연계하여 온체인(on-chain) 결제 인프라 구축"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "조각투자 모범규준 주요 내용과 투자자 보호"
+    },
+    {
+      "type": "paragraph",
+      "text": "토큰화 시행과 함께 활성화될 비금전신탁 수익증권 조각투자에 대해 '혁신적 상품 등장 지원'과 '철저한 투자자 보호'를 조화시키기 위한 모범규준이 마련되었습니다."
+    },
+    {
+      "type": "list",
+      "items": [
+        "기초자산 집합화(Pooling) 조건부 허용: 동일 종류, 목적·기준의 명확성, 부실자산 포함 금지, 개별자산 구분 정보 제공 등을 충족하는 경우 여러 기초자산을 묶어 발행 가능",
+        "불확실사건 연계 기초자산 허용: 안정적인 기초 법률관계가 존재하고 장래 발생이 예상되며 신용보완 등 강화된 투자자 보호조치가 있는 경우 장래매출채권 등 허용",
+        "청약한도 및 배정 원칙: 일반투자자 1인당 청약한도는 표준 예시로 '3천만원과 발행금액의 5% 중 작은 규모'를 제시하고, 특정인 몰아주기 방지를 위한 공모물량 배정 내규 마련 권고"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "장외거래소 유통체계 및 발행인 계좌관리기관 제도"
+    },
+    {
+      "type": "paragraph",
+      "text": "기존에 금융투자업 인가를 받은 증권사나 장외거래소는 별도의 추가 인가 없이 업무 범위 내에서 토큰증권을 취급할 수 있습니다. 다만, 장외거래소의 경우 일반투자자 거래한도를 연간 순매수 금액 기준 1억원으로 설정하고 불공정거래 예방·감시 체계를 강화할 방침입니다."
+    },
+    {
+      "type": "paragraph",
+      "text": "또한, 분산원장의 공동 기재·관리 특성을 고려하여 증권 발행인이 직접 고객 계좌를 개설·관리할 수 있는 '발행인 계좌관리기관' 제도가 신설됩니다. 안정성 확보를 위해 자기자본 40억원 및 계좌관리·내부통제·전산 전문 인력 구비 등의 등록요건이 하위법규에 반영될 예정입니다."
+    },
+    {
+      "type": "infoBox",
+      "text": "금융위원회는 이번 정책방향에 따른 하위법규 개정안을 9월 말부터 입법예고하고 의견수렴을 거쳐 2027년 2월 제도 시행을 차질 없이 준비해 나갈 계획입니다."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1641025753993-6e5328a7e2d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8M3x8JUVEJTg2JUEwJUVEJTgxJUIwJUVDJUE2JTlEJUVBJUI2JThDJTI4U1QlMjklMjAlRUMlQTAlOUMlRUIlOEYlODQlRUQlOTklOTQlMjAlRUIlQjMlQjglRUElQjIlQTklMjAlRUMlQjYlOTQlRUMlQTclODQlM0ElMjAlRUIlQjAlOUMlRUQlOTYlODklMjAlRUMlOUQlQjglRUQlOTQlODQlRUIlOUQlQkMlMjAlRUIlOEIlQTglRUElQjMlODQlRUIlQjMlODQlMjAlRUElQjUlQUMlRUMlQjYlOTUlRUElQjMlQkMlMjAlRUMlQTElQjAlRUElQjAlODElRUQlODglQUMlRUMlOUUlOTAlMjAlRUIlQUElQTglRUIlQjIlOTQlRUElQjclOUMlRUMlQTQlODAlMjBmaW5hbmNlJTIwbm8lMjBwZW9wbGV8ZW58MHwwfHx8MTc4OTA5MTcwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "a white wall with a sign that says please touch",
+      "provider": "unsplash",
+      "credit": "Photo by Suzi Kim on Unsplash"
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1547561769-08a6b502bdaa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8NHx8JUVEJTg2JUEwJUVEJTgxJUIwJUVDJUE2JTlEJUVBJUI2JThDJTI4U1QlMjklMjAlRUMlQTAlOUMlRUIlOEYlODQlRUQlOTklOTQlMjAlRUIlQjMlQjglRUElQjIlQTklMjAlRUMlQjYlOTQlRUMlQTclODQlM0ElMjAlRUIlQjAlOUMlRUQlOTYlODklMjAlRUMlOUQlQjglRUQlOTQlODQlRUIlOUQlQkMlMjAlRUIlOEIlQTglRUElQjMlODQlRUIlQjMlODQlMjAlRUElQjUlQUMlRUMlQjYlOTUlRUElQjMlQkMlMjAlRUMlQTElQjAlRUElQjAlODElRUQlODglQUMlRUMlOUUlOTAlMjAlRUIlQUElQTglRUIlQjIlOTQlRUElQjclOUMlRUMlQTQlODAlMjBmaW5hbmNlJTIwbm8lMjBwZW9wbGV8ZW58MHwwfHx8MTc4OTA5MTcwMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "white and purple cardboard box",
+      "provider": "unsplash",
+      "credit": "Photo by Ra Dragon on Unsplash"
+    }
+  ],
+  "faq": [
+    {
+      "question": "토큰증권과 조각투자증권은 다른 개념인가요?",
+      "answer": "네, 다릅니다. 조각투자증권은 비금전신탁 수익증권이나 투자계약증권으로서 증권의 '내용'에 따른 구분이며, 토큰증권은 분산원장 기반의 전자적 방식으로 발행 및 유통되는 증권의 '형태'에 따른 구분입니다. 정형증권인 주식이나 채권도 토큰 형태로 발행되면 토큰증권이 됩니다."
+    },
+    {
+      "question": "장외거래소에서 토큰증권을 거래할 때 일반투자자 한도가 있나요?",
+      "answer": "네, 장외거래소별 일반투자자 거래한도는 '연간 순매수 금액(총매수금액-총매도금액)'을 기준으로 1억원 한도가 설정됩니다."
+    },
+    {
+      "question": "발행인 계좌관리기관이 되기 위한 요건은 무엇인가요?",
+      "answer": "발행인이 직접 고객 계좌를 관리하는 발행인 계좌관리기관으로 등록하기 위해서는 자기자본 40억원 이상을 갖추어야 하며, 계좌관리·내부통제·전산 전문 인력과 엄격한 전산·보안 설비를 구비해야 합니다."
+    }
+  ],
+  "sources": [
+    {
+      "title": "토큰증권 정책방향 발표- 민·관 합동 토큰증권 협의체 3차회의 개최",
+      "url": "https://www.fsc.go.kr/no010101/87650"
+    }
+  ]
+}

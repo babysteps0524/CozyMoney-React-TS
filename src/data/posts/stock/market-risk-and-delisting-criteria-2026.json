@@ -1,0 +1,106 @@
+{
+  "id": "stock-market-risk-and-delisting-criteria-202609",
+  "title": "코스닥 상장폐지 시가총액 기준 유예 및 부문별 리스크 점검 동향",
+  "description": "구윤철 부총리 겸 재정경제부 장관 주재의 시장상황점검회의를 통해 금리 상승에 따른 취약차주 및 상호금융권 영향, 그리고 코스닥·코스피 시장의 상장폐지 시가총액 기준 강화 방안 보완 및 코넥스 이전상장 허용 등의 주요 금융·외환·부동산 시장 리스크 점검 내용을 정리합니다.",
+  "slug": "market-risk-and-delisting-criteria-2026",
+  "category": "stock",
+  "tags": [
+    "증시",
+    "상장폐지",
+    "코스닥",
+    "시장상황점검회의",
+    "금융정책"
+  ],
+  "keywords": [
+    "상장폐지 시가총액 기준",
+    "코넥스 이전상장",
+    "시장상황점검회의",
+    "취약차주",
+    "상호금융권"
+  ],
+  "date": "2026-09-04",
+  "updated": "2026-09-04",
+  "author": "CozyMoney",
+  "images": [
+    {
+      "src": "https://images.unsplash.com/photo-1737270967304-57a56c6f78bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8NXx8JUVDJUJEJTk0JUVDJThBJUE0JUVCJThCJUE1JTIwJUVDJTgzJTgxJUVDJTlFJUE1JUVEJThGJTkwJUVDJUE3JTgwJTIwJUVDJThCJTlDJUVBJUIwJTgwJUVDJUI0JTlEJUVDJTk1JUExJTIwJUVBJUI4JUIwJUVDJUE0JTgwJTIwJUVDJTlDJUEwJUVDJTk4JTg4JTIwJUVCJUIwJThGJTIwJUVCJUI2JTgwJUVCJUFDJUI4JUVCJUIzJTg0JTIwJUVCJUE2JUFDJUVDJThBJUE0JUVEJTgxJUFDJTIwJUVDJUEwJTkwJUVBJUIyJTgwJTIwJUVCJThGJTk5JUVEJTk2JUE1JTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkwODg5MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "A group of police standing in front of a building",
+      "credit": "Photo by Jin-Woo Lee on Unsplash",
+      "provider": "unsplash"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1744518826911-ac9d3c572eb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8MTZ8fCVFQyVCRCU5NCVFQyU4QSVBNCVFQiU4QiVBNSUyMCVFQyU4MyU4MSVFQyU5RSVBNSVFRCU4RiU5MCVFQyVBNyU4MCUyMCVFQyU4QiU5QyVFQSVCMCU4MCVFQyVCNCU5RCVFQyU5NSVBMSUyMCVFQSVCOCVCMCVFQyVBNCU4MCUyMCVFQyU5QyVBMCVFQyU5OCU4OCUyMCVFQiVCMCU4RiUyMCVFQiVCNiU4MCVFQiVBQyVCOCVFQiVCMyU4NCUyMCVFQiVBNiVBQyVFQyU4QSVBNCVFRCU4MSVBQyUyMCVFQyVBMCU5MCVFQSVCMiU4MCUyMCVFQiU4RiU5OSVFRCU5NiVBNSUyMGZpbmFuY2UlMjBubyUyMHBlb3BsZXxlbnwwfDB8fHwxNzg5MDg4OTI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "A korean restaurant is seen at night",
+      "credit": "Photo by Seung Hyun Lee on Unsplash",
+      "provider": "unsplash"
+    }
+  ],
+  "sections": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "1. 금융·외환·부동산 부문별 리스크 점검 개요"
+    },
+    {
+      "type": "paragraph",
+      "text": "정부는 관계기관 합동 '시장상황점검회의'를 개최하여 국내외 금융·외환시장 및 부동산시장의 동향을 통합 점검하고 대응 방향을 논의했습니다. 최근 글로벌 채권 수급 요인과 주요국의 정책금리 인상 기대, 중동 긴장에 따른 유가 상승 등이 겹치며 금리 상승 압력이 지속되고 있습니다."
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "2. 코스닥 및 코스피 상장폐지 제도 운영 방향 보완"
+    },
+    {
+      "type": "paragraph",
+      "text": "최근 코스닥 시장 시황 악화를 고려하여, 부실기업의 신속하고 엄정한 퇴출을 위한 상장폐지 개혁방안 중 일부 제도가 보완 및 유예됩니다."
+    },
+    {
+      "type": "list",
+      "text": "주요 제도 개선 및 보완 내용",
+      "items": [
+        "일정 재무요건을 갖춘 기업에 대해 '정리매매 없이' 코넥스 이전상장을 허용하여 상장폐지 충격 완화",
+        "내년 1월 1일부터 예정되었던 시가총액 기준 추가 상향(200억원 → 300억원)을 시장 회복 기간을 감안하여 6개월 유예 (2027년 1월 → 2027년 7월)",
+        "코스피 시장에서도 동일하게 코넥스 이전상장 및 시가총액 상향 유예 조치 추진"
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": "3. 취약차주 및 상호금융권 건전성 관리"
+    },
+    {
+      "type": "paragraph",
+      "text": "금리 인상에 따른 취약 차주 영향 및 상호금융권의 건전성 현황을 점검한 결과, 현재까지는 대체로 양호한 수준이나 향후 금리가 큰 폭으로 상승할 경우 어려움이 가중될 수 있어 면밀한 모니터링이 요구됩니다. 정부는 지난 8월 28일 발표한 취약차주 지원방안을 차질 없이 추진해 나갈 방침입니다."
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1737270967304-57a56c6f78bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8NXx8JUVDJUJEJTk0JUVDJThBJUE0JUVCJThCJUE1JTIwJUVDJTgzJTgxJUVDJTlFJUE1JUVEJThGJTkwJUVDJUE3JTgwJTIwJUVDJThCJTlDJUVBJUIwJTgwJUVDJUI0JTlEJUVDJTk1JUExJTIwJUVBJUI4JUIwJUVDJUE0JTgwJTIwJUVDJTlDJUEwJUVDJTk4JTg4JTIwJUVCJUIwJThGJTIwJUVCJUI2JTgwJUVCJUFDJUI4JUVCJUIzJTg0JTIwJUVCJUE2JUFDJUVDJThBJUE0JUVEJTgxJUFDJTIwJUVDJUEwJTkwJUVBJUIyJTgwJTIwJUVCJThGJTk5JUVEJTk2JUE1JTIwZmluYW5jZSUyMG5vJTIwcGVvcGxlfGVufDB8MHx8fDE3ODkwODg5MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "A group of police standing in front of a building",
+      "provider": "unsplash",
+      "credit": "Photo by Jin-Woo Lee on Unsplash"
+    },
+    {
+      "type": "image",
+      "src": "https://images.unsplash.com/photo-1744518826911-ac9d3c572eb2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDQ5NzkxfDB8MXxzZWFyY2h8MTZ8fCVFQyVCRCU5NCVFQyU4QSVBNCVFQiU4QiVBNSUyMCVFQyU4MyU4MSVFQyU5RSVBNSVFRCU4RiU5MCVFQyVBNyU4MCUyMCVFQyU4QiU5QyVFQSVCMCU4MCVFQyVCNCU5RCVFQyU5NSVBMSUyMCVFQSVCOCVCMCVFQyVBNCU4MCUyMCVFQyU5QyVBMCVFQyU5OCU4OCUyMCVFQiVCMCU4RiUyMCVFQiVCNiU4MCVFQiVBQyVCOCVFQiVCMyU4NCUyMCVFQiVBNiVBQyVFQyU4QSVBNCVFRCU4MSVBQyUyMCVFQyVBMCU5MCVFQSVCMiU4MCUyMCVFQiU4RiU5OSVFRCU5NiVBNSUyMGZpbmFuY2UlMjBubyUyMHBlb3BsZXxlbnwwfDB8fHwxNzg5MDg4OTI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "alt": "A korean restaurant is seen at night",
+      "provider": "unsplash",
+      "credit": "Photo by Seung Hyun Lee on Unsplash"
+    }
+  ],
+  "faq": [
+    {
+      "question": "코스닥 상장폐지 시가총액 기준 상향은 언제로 유예되었나요?",
+      "answer": "당초 2027년 1월 1일 예정되었으나, 시장 회복에 필요한 기간을 감안하여 6개월 유예된 2027년 7월로 조정되었습니다."
+    },
+    {
+      "question": "상장폐지 위기에 처한 기업의 구제 방안은 무엇인가요?",
+      "answer": "일정 재무요건을 갖춘 기업의 경우 정리매매 절차 없이 코넥스 시장으로의 이전상장을 허용하여 충격을 완화할 수 있도록 제도가 보완되었습니다."
+    }
+  ],
+  "sources": [
+    {
+      "title": "금융·외환·부동산 등 부문별 리스크 종합 점검",
+      "url": "https://www.fsc.go.kr/no010101/87648"
+    }
+  ]
+}
