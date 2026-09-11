@@ -21,7 +21,7 @@ export function Home() {
           </h1>
           <p className="mt-4 text-sm md:text-base leading-7 opacity-85">
             주식·세금·재무회계 정보와 생활에 바로 쓰는 금융 계산기를 한곳에서
-            제공해.
+            제공합니다.
           </p>
           <div className="flex flex-wrap gap-2 mt-6">
             <a

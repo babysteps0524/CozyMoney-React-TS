@@ -24,7 +24,7 @@ export default defineConfig({
         primary: "#174a5b",
         accent: "#2a9d8f",
         gold: "#e9c46a",
-        Logo: "oklch(0.66796 0.14628 52.09)"
+        logo: "#d97732"
       },
     },
   },

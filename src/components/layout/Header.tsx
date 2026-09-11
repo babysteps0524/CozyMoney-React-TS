@@ -49,7 +49,6 @@ export function Header() {
           {o ? "×" : "☰"}
         </button>
       </div>
-
       {o && (
         <nav className="min-[900px]:hidden border-t border-cm-line">
           <div className="page grid grid-cols-2 gap-2 py-3">

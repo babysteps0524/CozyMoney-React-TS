@@ -552,9 +552,9 @@ function SavingsCalculator() {
             <div className="grid min-w-0 grid-cols-1 gap-2 sm:grid-cols-3">
               {(
                 [
-                  ["general", "일반 과세"],
+                  ["general", "일반 과세(15.4%)"],
                   ["taxFree", "비과세"],
-                  ["preferential", "세금 우대"],
+                  ["preferential", "세금 우대(9.5%)"],
                 ] as const
               ).map(([v, label]) => (
                 <label

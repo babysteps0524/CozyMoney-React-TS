@@ -6,9 +6,6 @@ export function Footer() {
           <a href="/privacy/" className="text-sm underline">
             개인정보처리방침
           </a>
-          <a href="/calculators/" className="text-sm underline">
-            계산기
-          </a>
         </div>
         <p className="m-0 text-xs opacity-75">
           © {new Date().getFullYear()} CozyMoney
