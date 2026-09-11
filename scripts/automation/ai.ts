@@ -95,7 +95,7 @@ async function readError(response: Response): Promise<string> {
 }
 
 async function callGemini(key: string, prompt: string): Promise<JsonObject> {
-  const model = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash-lite";
+  const model = process.env.GEMINI_MODEL?.trim() || "gemini-3.5-flash-lite";
 
   const url =
     "https://generativelanguage.googleapis.com/v1beta/models/" +

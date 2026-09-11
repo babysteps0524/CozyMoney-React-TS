@@ -39,6 +39,20 @@ const DRY_RUN = String(process.env.DRY_RUN ?? "true").toLowerCase() === "true";
 
 const MINIMUM_H2_COUNT = 5;
 
+/*
+ * ============================================================
+ * 실행 중 게시글 번호 관리
+ *
+ * DRY RUN에서는 파일을 실제로 저장하지 않기 때문에
+ * 파일 시스템만 확인하면 1번이 계속 반환된다.
+ *
+ * 따라서 한 번의 실행 동안 사용할 다음 번호를
+ * 메모리에서 관리한다.
+ * ============================================================
+ */
+
+const nextPostNumbers = new Map<string, number>();
+
 console.log(`\n[AUTOPOST] 모드: ${DRY_RUN ? "DRY RUN" : "REAL POST"}\n`);
 
 /* ============================================================
@@ -94,12 +108,21 @@ function getShortDate(date: string): string {
 
 /* ============================================================
  * 해당 날짜의 다음 게시글 번호
+ *
+ * 파일 시스템 + 현재 실행 중 예약된 번호를 함께 확인한다.
  * ============================================================ */
 
 function getNextPostNumber(category: string, date: string): number {
+  const cachedNumber = nextPostNumbers.get(category);
+
+  if (cachedNumber !== undefined) {
+    return cachedNumber;
+  }
+
   const directory = path.join(config.posts, category);
 
   if (!fs.existsSync(directory)) {
+    nextPostNumbers.set(category, 1);
     return 1;
   }
 
@@ -124,11 +147,21 @@ function getNextPostNumber(category: string, date: string): number {
     }
   }
 
-  if (numbers.length === 0) {
-    return 1;
-  }
+  const nextNumber = numbers.length === 0 ? 1 : Math.max(...numbers) + 1;
 
-  return Math.max(...numbers) + 1;
+  nextPostNumbers.set(category, nextNumber);
+
+  return nextNumber;
+}
+
+/* ============================================================
+ * 게시글 번호 확정
+ *
+ * Schema 검증과 파일 경로 생성이 성공한 후 호출한다.
+ * ============================================================ */
+
+function commitPostNumber(category: string, number: number): void {
+  nextPostNumbers.set(category, number + 1);
 }
 
 /* ============================================================
@@ -172,6 +205,7 @@ async function feed(category: string): Promise<FeedItem[]> {
 
       if (!response.ok) {
         console.warn(`[WARN] RSS 요청 실패: ${source.name} ${response.status}`);
+
         continue;
       }
 
@@ -185,7 +219,13 @@ async function feed(category: string): Promise<FeedItem[]> {
           ?.replace(/<!\[CDATA\[|\]\]>/g, "")
           .trim();
 
-        const url = item.match(/<link[^>]*>([\s\S]*?)<\/link>/i)?.[1]?.trim();
+        const rawUrl = item.match(/<link[^>]*>([\s\S]*?)<\/link>/i)?.[1] ?? "";
+
+        const url = rawUrl
+          .trim()
+          .replace(/^<!\[CDATA\[/i, "")
+          .replace(/\]\]>$/i, "")
+          .trim();
 
         const description = item
           .match(/<description[^>]*>([\s\S]*?)<\/description>/i)?.[1]
@@ -198,7 +238,8 @@ async function feed(category: string): Promise<FeedItem[]> {
         }
 
         if (!isValidHttpUrl(url)) {
-          console.warn(`[WARN] 잘못된 RSS URL 무시: ${url}`);
+          console.warn(`[WARN] 잘못된 RSS URL 무시: ${rawUrl.trim()}`);
+
           continue;
         }
 
@@ -336,6 +377,10 @@ function normalizeSections(sections: any[]): any[] {
     return [];
   }
 
+  /*
+   * image는 AI가 생성하지 않는다.
+   * 실제 이미지는 자동화 시스템이 삽입한다.
+   */
   const allowedTypes = new Set([
     "heading",
     "paragraph",
@@ -345,7 +390,6 @@ function normalizeSections(sections: any[]): any[] {
     "infoBox",
     "warningBox",
     "table",
-    "image",
     "chart",
   ]);
 
@@ -692,10 +736,10 @@ function normalizeSources(postSources: any[], candidates: FeedItem[]): any[] {
 }
 
 /* ============================================================
- * 임시 Schema 검증
+ * 생성 단계 Schema 검증
  *
  * id / slug는 publishPost에서 실제 생성되므로
- * 여기서는 임시값을 넣어 전체 객체를 검증한다.
+ * 임시값을 넣어 전체 객체를 검증한다.
  * ============================================================ */
 
 function validateGeneratedPost(post: Post, category: string): void {
@@ -744,6 +788,7 @@ async function generatePost(
       const post: Post = {
         ...data,
         category,
+
         date: getKstDate(),
         updated: getKstDate(),
 
@@ -855,9 +900,11 @@ async function generatePost(
 
       /*
        * 중요:
+       *
        * 여기서는 image-history에 기록하지 않는다.
        *
-       * 실제 파일 저장 성공 후 publishPost()에서 기록한다.
+       * 실제 파일 저장 성공 후 publishPost()에서
+       * 기록한다.
        */
 
       return post;
@@ -883,19 +930,23 @@ async function generatePost(
 async function publishPost(category: string, post: Post): Promise<void> {
   const date = getKstDate();
 
+  /*
+   * 현재 실행에서 사용할 번호를 가져온다.
+   *
+   * DRY RUN이어도 메모리에 다음 번호가 유지된다.
+   */
   const number = getNextPostNumber(category, date);
 
   const slug = `${getShortDate(date)}-${number}`;
 
   post.id = `${category}-${slug}`;
+
   post.slug = slug;
   post.date = date;
   post.updated = date;
 
   /* ==========================================================
    * 실제 최종 Schema 검증
-   *
-   * 이제 id / slug까지 모두 존재한다.
    * ========================================================== */
 
   const validation = postSchema.safeParse(post);
@@ -908,11 +959,13 @@ async function publishPost(category: string, post: Post): Promise<void> {
 
   const directory = path.join(config.posts, category);
 
-  fs.mkdirSync(directory, {
-    recursive: true,
-  });
-
   const filePath = path.join(directory, `${slug}.json`);
+
+  /*
+   * Schema 검증까지 성공한 번호를
+   * 다음 번호로 확정한다.
+   */
+  commitPostNumber(category, number);
 
   /* ==========================================================
    * DRY RUN
@@ -929,6 +982,14 @@ async function publishPost(category: string, post: Post): Promise<void> {
 
     return;
   }
+
+  /* ==========================================================
+   * 실제 디렉터리 생성
+   * ========================================================== */
+
+  fs.mkdirSync(directory, {
+    recursive: true,
+  });
 
   /* ==========================================================
    * 실제 JSON 저장
