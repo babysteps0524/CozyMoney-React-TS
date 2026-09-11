@@ -4,6 +4,7 @@ import path from "node:path";
 import { config } from "./config";
 import { ai } from "./ai";
 import { images } from "./images";
+import { recordUsedImages } from "./imageHistory";
 import { postSchema } from "../../src/lib/schema";
 
 type Post = {
@@ -40,6 +41,10 @@ const MINIMUM_H2_COUNT = 5;
 
 console.log(`\n[AUTOPOST] 모드: ${DRY_RUN ? "DRY RUN" : "REAL POST"}\n`);
 
+/* ============================================================
+ * 기존 게시글
+ * ============================================================ */
+
 function existing(category: string): Post[] {
   const directory = path.join(config.posts, category);
 
@@ -66,6 +71,10 @@ function existing(category: string): Post[] {
   return posts;
 }
 
+/* ============================================================
+ * KST 날짜
+ * ============================================================ */
+
 function getKstDate(): string {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Seoul",
@@ -75,9 +84,17 @@ function getKstDate(): string {
   }).format(new Date());
 }
 
+/* ============================================================
+ * 2026-09-11 → 260911
+ * ============================================================ */
+
 function getShortDate(date: string): string {
   return date.replace(/-/g, "").slice(2);
 }
+
+/* ============================================================
+ * 해당 날짜의 다음 게시글 번호
+ * ============================================================ */
 
 function getNextPostNumber(category: string, date: string): number {
   const directory = path.join(config.posts, category);
@@ -87,7 +104,6 @@ function getNextPostNumber(category: string, date: string): number {
   }
 
   const shortDate = getShortDate(date);
-
   const numbers: number[] = [];
 
   const pattern = new RegExp(`^${shortDate}-(\\d+)\\.json$`);
@@ -115,6 +131,34 @@ function getNextPostNumber(category: string, date: string): number {
   return Math.max(...numbers) + 1;
 }
 
+/* ============================================================
+ * RSS URL 검증
+ * ============================================================ */
+
+function isValidHttpUrl(value: unknown): value is string {
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  const url = value.trim();
+
+  if (!url) {
+    return false;
+  }
+
+  try {
+    const parsed = new URL(url);
+
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+/* ============================================================
+ * RSS 수집
+ * ============================================================ */
+
 async function feed(category: string): Promise<FeedItem[]> {
   const out: FeedItem[] = [];
 
@@ -128,7 +172,6 @@ async function feed(category: string): Promise<FeedItem[]> {
 
       if (!response.ok) {
         console.warn(`[WARN] RSS 요청 실패: ${source.name} ${response.status}`);
-
         continue;
       }
 
@@ -154,6 +197,11 @@ async function feed(category: string): Promise<FeedItem[]> {
           continue;
         }
 
+        if (!isValidHttpUrl(url)) {
+          console.warn(`[WARN] 잘못된 RSS URL 무시: ${url}`);
+          continue;
+        }
+
         out.push({
           title,
           url,
@@ -169,9 +217,10 @@ async function feed(category: string): Promise<FeedItem[]> {
     }
   }
 
-  /*
-   * 같은 URL의 중복 뉴스 제거
-   */
+  /* ==========================================================
+   * 같은 URL 중복 제거
+   * ========================================================== */
+
   const unique = new Map<string, FeedItem>();
 
   for (const item of out) {
@@ -183,10 +232,10 @@ async function feed(category: string): Promise<FeedItem[]> {
   return Array.from(unique.values()).slice(0, 12);
 }
 
-/**
- * AI가 잘못 생성한 Markdown table을
- * 구조화된 table block으로 변환한다.
- */
+/* ============================================================
+ * Markdown Table → JSON Table
+ * ============================================================ */
+
 function normalizeMarkdownTableSections(sections: any[]): any[] {
   const result: any[] = [];
 
@@ -212,9 +261,7 @@ function normalizeMarkdownTableSections(sections: any[]): any[] {
       .map((line: string) => line.trim())
       .filter(Boolean);
 
-    /*
-     * AI가 한 줄로 table을 생성한 경우 대응
-     */
+    /* AI가 한 줄로 table을 생성한 경우 */
     if (lines.length === 1 && text.includes("| |")) {
       lines = text
         .split(/\s*\|\s*\|\s*/)
@@ -280,86 +327,91 @@ function normalizeMarkdownTableSections(sections: any[]): any[] {
   return result;
 }
 
-/**
- * AI 응답 section을 안전한 구조로 정규화한다.
- */
+/* ============================================================
+ * Section 정규화
+ * ============================================================ */
+
 function normalizeSections(sections: any[]): any[] {
+  if (!Array.isArray(sections)) {
+    return [];
+  }
+
+  const allowedTypes = new Set([
+    "heading",
+    "paragraph",
+    "list",
+    "orderedList",
+    "blockquote",
+    "infoBox",
+    "warningBox",
+    "table",
+    "image",
+    "chart",
+  ]);
+
   return sections
-    .filter(
-      (section) =>
-        section && typeof section === "object" && !Array.isArray(section),
-    )
+    .filter((section) => {
+      if (!section || typeof section !== "object") {
+        return false;
+      }
+
+      return allowedTypes.has(section.type);
+    })
     .map((section) => {
       const normalized = {
         ...section,
       };
 
-      /*
-       * 기존 자동화에서 text로 생성된 경우
-       * content로 통일한다.
-       */
-      if (
-        typeof normalized.content !== "string" &&
-        typeof normalized.text === "string"
-      ) {
-        normalized.content = normalized.text;
+      /* heading level */
+      if (normalized.type === "heading" && normalized.level != null) {
+        const level = Number(normalized.level);
+
+        normalized.level = Math.min(
+          4,
+          Math.max(2, Number.isFinite(level) ? level : 2),
+        );
       }
 
-      delete normalized.text;
+      /* text → content */
+      if (
+        normalized.type === "paragraph" &&
+        typeof normalized.text === "string" &&
+        typeof normalized.content !== "string"
+      ) {
+        normalized.content = normalized.text;
 
-      /*
-       * H2 ~ H4만 허용
-       */
-      if (normalized.type === "heading") {
-        let level = Number(normalized.level);
-
-        if (!Number.isFinite(level)) {
-          level = 2;
-        }
-
-        level = Math.round(level);
-
-        if (level < 2) {
-          level = 2;
-        }
-
-        if (level > 4) {
-          level = 4;
-        }
-
-        normalized.level = level;
+        delete normalized.text;
       }
 
       return normalized;
     });
 }
 
-/**
- * sections 안에 source block이 들어온 경우 제거한다.
- *
- * 출처는 최상위 sources에서만 관리한다.
- */
+/* ============================================================
+ * Section source 제거
+ * ============================================================ */
+
 function removeSectionSources(sections: any[]): any[] {
   return sections.filter((section) => section?.type !== "source");
 }
 
-/**
- * H2 개수를 센다.
- */
+/* ============================================================
+ * H2 개수
+ * ============================================================ */
+
 function countH2(sections: any[]): number {
   return sections.filter(
     (section) => section?.type === "heading" && Number(section.level) === 2,
   ).length;
 }
 
-/**
- * 이미지 2개를 H2 사이에 배치한다.
+/* ============================================================
+ * 이미지 삽입
  *
- * 3번째 H2 이후 → 이미지 1
- * 5번째 H2 이후 → 이미지 2
- *
- * H2가 5개 미만이면 에러를 발생시킨다.
- */
+ * 3번째 H2 뒤 → 이미지 1
+ * 5번째 H2 뒤 → 이미지 2
+ * ============================================================ */
+
 function insertImagesBetweenHeadings(sections: any[], imageList: any[]): any[] {
   if (imageList.length !== 2) {
     throw new Error("게시글 이미지는 정확히 2개여야 합니다.");
@@ -379,17 +431,12 @@ function insertImagesBetweenHeadings(sections: any[], imageList: any[]): any[] {
   let currentH2 = 0;
 
   for (const section of sections) {
-    /*
-     * H2를 먼저 추가한다.
-     */
     result.push(section);
 
     if (section?.type === "heading" && Number(section.level) === 2) {
       currentH2++;
 
-      /*
-       * 3번째 H2 바로 다음에 이미지 1
-       */
+      /* 3번째 H2 다음 */
       if (currentH2 === 3 && imageIndex === 0) {
         result.push({
           type: "image",
@@ -399,9 +446,7 @@ function insertImagesBetweenHeadings(sections: any[], imageList: any[]): any[] {
         imageIndex++;
       }
 
-      /*
-       * 5번째 H2 바로 다음에 이미지 2
-       */
+      /* 5번째 H2 다음 */
       if (currentH2 === 5 && imageIndex === 1) {
         result.push({
           type: "image",
@@ -420,9 +465,10 @@ function insertImagesBetweenHeadings(sections: any[], imageList: any[]): any[] {
   return result;
 }
 
-/**
- * AI에게 전달할 프롬프트
- */
+/* ============================================================
+ * AI Prompt
+ * ============================================================ */
+
 function createPrompt(
   category: string,
   candidate: FeedItem[],
@@ -454,6 +500,7 @@ URL: ${item.url}
 "${category}" 카테고리의 정보성 블로그 글 1개를 작성한다.
 
 중요:
+
 - 반드시 제공된 후보 자료를 기반으로 작성한다.
 - 제공되지 않은 사실을 임의로 만들어내지 않는다.
 - 공식 출처 URL을 그대로 사용한다.
@@ -489,30 +536,23 @@ URL: ${item.url}
 
 반드시 H2를 최소 5개 생성한다.
 
-권장 구조:
-
-H2 1:
-주제의 배경과 핵심 내용
-
-H2 2:
-주요 내용과 세부 사항
-
-H2 3:
-시장·세금·회계 등에 미치는 영향
-
-H2 4:
-관련 제도 또는 업계 변화
-
-H2 5:
-독자가 확인해야 할 핵심 사항
-
-필요하면 H3/H4를 추가할 수 있다.
-
 각 H2에는 충분한 설명을 작성한다.
 
 단순히 문단 몇 개와 표 하나로 끝내지 않는다.
 
-본문은 정보성 글답게 구체적으로 작성한다.
+각 H2마다 최소 2개의 충분한 문단을 작성하도록 노력한다.
+
+가능하면 다음 정보를 포함한다.
+
+- 사건 또는 제도의 배경
+- 핵심 내용
+- 주요 변화
+- 시장·세금·회계에 미치는 영향
+- 관련 제도 또는 업계 변화
+- 독자가 확인해야 할 핵심 사항
+- 향후 전망
+
+단, 제공된 자료에 없는 사실이나 숫자를 만들어내지 않는다.
 
 ==================================================
 이미지 규칙
@@ -538,9 +578,9 @@ sources에는 실제 제공된 후보 URL만 사용한다.
 FAQ 규칙
 ==================================================
 
-FAQ는 2~4개 작성한다.
+FAQ는 3~4개 작성한다.
 
-질문과 답변은 본문의 핵심 내용을 반복하기보다
+질문과 답변은 본문의 핵심 내용을 단순 반복하지 말고
 독자가 실제로 궁금해할 만한 내용으로 작성한다.
 
 ==================================================
@@ -597,115 +637,87 @@ JSON 객체만 출력한다.
 `;
 }
 
-/**
- * AI가 반환한 JSON을 파싱한다.
- */
-function parseAiJson(raw: string): Record<string, any> {
-  let text = raw.trim();
+/* ============================================================
+ * Source 정규화
+ * ============================================================ */
 
-  /*
-   * 혹시 AI가 ```json ... ```으로 감싼 경우 제거
-   */
-  text = text
-    .replace(/^```json\s*/i, "")
-    .replace(/^```\s*/i, "")
-    .replace(/\s*```$/i, "")
-    .trim();
+function normalizeSources(postSources: any[], candidates: FeedItem[]): any[] {
+  const candidateMap = new Map(candidates.map((item) => [item.url, item]));
 
-  try {
-    const parsed = JSON.parse(text);
+  const result: any[] = [];
 
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      throw new Error("AI 응답이 JSON 객체가 아닙니다.");
-    }
+  for (const source of Array.isArray(postSources) ? postSources : []) {
+    const url = typeof source?.url === "string" ? source.url.trim() : "";
 
-    return parsed;
-  } catch {
-    /*
-     * JSON 앞뒤에 불필요한 문자가 붙은 경우
-     */
-    const start = text.indexOf("{");
-    const end = text.lastIndexOf("}");
-
-    if (start === -1 || end === -1) {
-      throw new Error("AI 응답에서 JSON 객체를 찾을 수 없습니다.");
-    }
-
-    const extracted = text.slice(start, end + 1);
-
-    const parsed = JSON.parse(extracted);
-
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-      throw new Error("AI 응답이 JSON 객체가 아닙니다.");
-    }
-
-    return parsed;
-  }
-}
-
-/**
- * AI가 반환한 sources를
- * 실제 RSS 후보 URL 기준으로 검증한다.
- */
-function normalizeSources(postSources: any[], candidate: FeedItem[]): any[] {
-  const candidateMap = new Map(candidate.map((item) => [item.url, item]));
-
-  const result: {
-    title: string;
-    url: string;
-  }[] = [];
-
-  for (const source of postSources) {
-    if (!source || typeof source !== "object") {
+    if (!isValidHttpUrl(url)) {
       continue;
     }
 
-    const url = typeof source.url === "string" ? source.url.trim() : "";
+    const candidate = candidateMap.get(url);
 
-    if (!url) {
+    if (!candidate) {
       continue;
     }
 
-    const original = candidateMap.get(url);
-
-    if (!original) {
-      continue;
-    }
-
-    if (result.some((item) => item.url === url)) {
+    if (!isValidHttpUrl(candidate.url)) {
       continue;
     }
 
     result.push({
       title:
-        typeof source.title === "string" && source.title.trim()
+        typeof source?.title === "string" && source.title.trim()
           ? source.title.trim()
-          : original.source,
-      url,
+          : candidate.title,
+      url: candidate.url,
     });
   }
 
-  /*
-   * AI가 source를 누락한 경우
-   * 실제 후보 중 첫 번째를 보완한다.
-   */
+  /* AI가 잘못된 sources를 모두 생성한 경우 */
   if (result.length === 0) {
-    const first = candidate[0];
+    const fallback = candidates.find((candidate) =>
+      isValidHttpUrl(candidate.url),
+    );
 
-    if (first) {
-      result.push({
-        title: first.source,
-        url: first.url,
-      });
+    if (fallback) {
+      return [
+        {
+          title: fallback.title,
+          url: fallback.url,
+        },
+      ];
     }
   }
 
   return result;
 }
 
-/**
- * 게시글 1개 생성
- */
+/* ============================================================
+ * 임시 Schema 검증
+ *
+ * id / slug는 publishPost에서 실제 생성되므로
+ * 여기서는 임시값을 넣어 전체 객체를 검증한다.
+ * ============================================================ */
+
+function validateGeneratedPost(post: Post, category: string): void {
+  const validationTarget = {
+    ...post,
+    id: `${category}-validation`,
+    slug: "validation",
+  };
+
+  const validation = postSchema.safeParse(validationTarget);
+
+  if (!validation.success) {
+    console.error("[VALIDATION ERROR]", validation.error.flatten());
+
+    throw new Error("게시글 Schema 검증 실패");
+  }
+}
+
+/* ============================================================
+ * 게시글 생성
+ * ============================================================ */
+
 async function generatePost(
   category: string,
   candidate: FeedItem[],
@@ -713,30 +725,26 @@ async function generatePost(
 ): Promise<Post> {
   let lastError: unknown = null;
 
-  /*
-   * 중복 제목 또는 구조 문제가 발생하면
-   * 최대 3번까지 AI를 다시 호출한다.
-   */
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       console.log(`[AI] ${category} 글 생성 ${attempt}/3`);
 
       const prompt = createPrompt(category, candidate, usedTitles);
 
-      const raw = await ai(prompt);
-
-      const data = parseAiJson(raw);
-
       /*
-       * 기본 필드
+       * ai()는 이미 JSON 객체를 반환한다.
+       * 여기서 다시 JSON.parse하지 않는다.
        */
+      const data = await ai(prompt);
+
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        throw new Error("AI 응답이 JSON 객체가 아닙니다.");
+      }
+
       const post: Post = {
         ...data,
-
         category,
-
         date: getKstDate(),
-
         updated: getKstDate(),
 
         author:
@@ -760,26 +768,22 @@ async function generatePost(
       delete post.slug;
       delete post.images;
 
-      /*
-       * sections 정규화
-       */
+      /* ========================================================
+       * Sections 정규화
+       * ======================================================== */
+
       let sections = Array.isArray(data.sections)
         ? normalizeSections(data.sections)
         : [];
 
-      /*
-       * source block 제거
-       */
       sections = removeSectionSources(sections);
 
-      /*
-       * Markdown table 변환
-       */
       sections = normalizeMarkdownTableSections(sections);
 
-      /*
-       * H2 최소 개수 검사
-       */
+      /* ========================================================
+       * H2 검사
+       * ======================================================== */
+
       const h2Count = countH2(sections);
 
       if (h2Count < MINIMUM_H2_COUNT) {
@@ -790,14 +794,20 @@ async function generatePost(
 
       post.sections = sections;
 
-      /*
-       * source URL을 실제 후보 기준으로 제한
-       */
+      /* ========================================================
+       * Sources 정규화
+       * ======================================================== */
+
       post.sources = normalizeSources(post.sources ?? [], candidate);
 
-      /*
-       * 제목 중복 검사
-       */
+      if (!post.sources || post.sources.length === 0) {
+        throw new Error("유효한 출처가 없습니다.");
+      }
+
+      /* ========================================================
+       * 제목 검사
+       * ======================================================== */
+
       const title = typeof post.title === "string" ? post.title.trim() : "";
 
       if (!title) {
@@ -812,14 +822,12 @@ async function generatePost(
         throw new Error(`중복 제목: ${title}`);
       }
 
-      /*
-       * 제목을 사용 목록에 추가
-       */
-      usedTitles.push(title);
+      post.title = title;
 
-      /*
-       * 이미지 생성
-       */
+      /* ========================================================
+       * 이미지 2개 선택
+       * ======================================================== */
+
       const imageList = await images(title);
 
       if (imageList.length !== 2) {
@@ -830,21 +838,27 @@ async function generatePost(
 
       post.images = imageList;
 
-      /*
-       * H2 사이에 이미지 삽입
-       */
+      /* ========================================================
+       * 이미지 삽입
+       *
+       * 3번째 H2 → 이미지 1
+       * 5번째 H2 → 이미지 2
+       * ======================================================== */
+
       post.sections = insertImagesBetweenHeadings(post.sections, imageList);
 
+      /* ========================================================
+       * 생성 단계 Schema 검증
+       * ======================================================== */
+
+      validateGeneratedPost(post, category);
+
       /*
-       * 최종 Schema 검증
+       * 중요:
+       * 여기서는 image-history에 기록하지 않는다.
+       *
+       * 실제 파일 저장 성공 후 publishPost()에서 기록한다.
        */
-      const validation = postSchema.safeParse(post);
-
-      if (!validation.success) {
-        console.error("[VALIDATION ERROR]", validation.error.flatten());
-
-        throw new Error("게시글 Schema 검증 실패");
-      }
 
       return post;
     } catch (error) {
@@ -862,9 +876,10 @@ async function generatePost(
     : new Error(`${category} 게시글 생성 실패`);
 }
 
-/**
+/* ============================================================
  * 게시글 저장
- */
+ * ============================================================ */
+
 async function publishPost(category: string, post: Post): Promise<void> {
   const date = getKstDate();
 
@@ -873,11 +888,23 @@ async function publishPost(category: string, post: Post): Promise<void> {
   const slug = `${getShortDate(date)}-${number}`;
 
   post.id = `${category}-${slug}`;
-
   post.slug = slug;
-
   post.date = date;
   post.updated = date;
+
+  /* ==========================================================
+   * 실제 최종 Schema 검증
+   *
+   * 이제 id / slug까지 모두 존재한다.
+   * ========================================================== */
+
+  const validation = postSchema.safeParse(post);
+
+  if (!validation.success) {
+    console.error("[FINAL VALIDATION ERROR]", validation.error.flatten());
+
+    throw new Error("최종 게시글 Schema 검증 실패");
+  }
 
   const directory = path.join(config.posts, category);
 
@@ -886,6 +913,12 @@ async function publishPost(category: string, post: Post): Promise<void> {
   });
 
   const filePath = path.join(directory, `${slug}.json`);
+
+  /* ==========================================================
+   * DRY RUN
+   *
+   * 파일 저장 및 image-history 기록 안 함
+   * ========================================================== */
 
   if (DRY_RUN) {
     console.log(`[DRY RUN] ${category}: ${post.title}`);
@@ -897,7 +930,25 @@ async function publishPost(category: string, post: Post): Promise<void> {
     return;
   }
 
+  /* ==========================================================
+   * 실제 JSON 저장
+   * ========================================================== */
+
   fs.writeFileSync(filePath, JSON.stringify(post, null, 2), "utf8");
+
+  /* ==========================================================
+   * 파일 저장 성공 후 이미지 기록
+   * ========================================================== */
+
+  if (Array.isArray(post.images) && post.images.length === 2) {
+    const imageUrls = post.images
+      .map((image) => (typeof image?.src === "string" ? image.src : ""))
+      .filter(Boolean);
+
+    if (imageUrls.length === 2) {
+      recordUsedImages(imageUrls);
+    }
+  }
 
   console.log(`[PUBLISHED] ${category}: ${post.title}`);
 
@@ -906,9 +957,10 @@ async function publishPost(category: string, post: Post): Promise<void> {
   console.log(`[URL] /${category}/${slug}/`);
 }
 
-/**
- * 메인 자동화
- */
+/* ============================================================
+ * Main
+ * ============================================================ */
+
 async function main(): Promise<void> {
   console.log("[AUTOPOST] 자동 포스팅 작업을 시작합니다.");
 
@@ -921,54 +973,59 @@ async function main(): Promise<void> {
   for (const category of config.categories) {
     console.log(`\n[CATEGORY] ${category}`);
 
-    /*
+    /* ========================================================
      * 기존 게시글 제목
-     */
+     * ======================================================== */
+
     const existingPosts = existing(category);
 
     const usedTitles = existingPosts
       .map((post) => post.title?.trim())
       .filter((title): title is string => Boolean(title));
 
-    /*
+    /* ========================================================
      * RSS 후보
-     */
+     * ======================================================== */
+
     const candidates = await feed(category);
 
     console.log(`[RSS] ${category}: ${candidates.length}개 후보`);
 
-    /*
-     * 후보가 없으면 AI 생성하지 않는다.
-     */
     if (candidates.length === 0) {
       console.warn(`[SKIP] ${category}: 공식 RSS 후보가 없습니다.`);
 
       continue;
     }
 
-    /*
+    /* ========================================================
      * 카테고리별 최대 2개
-     */
+     * ======================================================== */
+
     for (let index = 0; index < config.perCategory; index++) {
       console.log(`\n[POST] ${category} ${index + 1}/${config.perCategory}`);
 
       try {
-        /*
-         * 매번 현재 제목 목록을 기준으로 생성
-         */
         const post = await generatePost(category, candidates, usedTitles);
 
         await publishPost(category, post);
-      } catch (error) {
+
         /*
-         * 한 게시글 실패가
-         * 전체 카테고리/전체 자동화를 중단시키지 않는다.
+         * 실제 publish까지 성공한 게시글만
+         * 이번 실행의 중복 제목 목록에 추가한다.
          */
+        if (typeof post.title === "string" && post.title.trim()) {
+          usedTitles.push(post.title.trim());
+        }
+      } catch (error) {
         console.error(
           `[ERROR] ${category} ${index + 1}번 게시글 실패:`,
           error instanceof Error ? error.message : String(error),
         );
 
+        /*
+         * 한 게시글 실패가
+         * 다른 게시글과 다른 카테고리를 막지 않는다.
+         */
         continue;
       }
     }
@@ -976,6 +1033,10 @@ async function main(): Promise<void> {
 
   console.log("\n[AUTOPOST] 자동 포스팅 작업 완료");
 }
+
+/* ============================================================
+ * 실행
+ * ============================================================ */
 
 main().catch((error) => {
   console.error("[FATAL]", error);

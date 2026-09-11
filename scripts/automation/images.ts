@@ -1,4 +1,4 @@
-import { getUsedImageUrls, recordUsedImages } from "./imageHistory";
+import { getUsedImageUrls } from "./imageHistory";
 
 const bad =
   /\b(person|people|man|woman|child|portrait|face|selfie|celebrity|politician|casino|weapon|alcohol|smoking)\b/i;
@@ -86,7 +86,6 @@ async function searchPexels(query: string): Promise<ImageResult[]> {
 
   if (!key) {
     console.warn("[IMAGE] Pexels API 키 없음");
-
     return [];
   }
 
@@ -144,7 +143,6 @@ async function searchUnsplash(query: string): Promise<ImageResult[]> {
 
   if (!key) {
     console.warn("[IMAGE] Unsplash API 키 없음");
-
     return [];
   }
 
@@ -198,12 +196,15 @@ async function searchUnsplash(query: string): Promise<ImageResult[]> {
  * 이미지 2개 확보
  *
  * 우선순위:
- *
  * 1. Pexels 2개
  * 2. Unsplash 2개
  * 3. Pexels + Unsplash
  *
- * 단, 최근 5일 사용 이미지는 제외한다.
+ * 최근 5일 사용 이미지는 제외한다.
+ *
+ * 중요:
+ * 이 함수에서는 image-history를 변경하지 않는다.
+ * 최종 Schema 검증 성공 후 index.ts에서 기록한다.
  * ============================================================ */
 
 export async function images(query: string): Promise<ImageResult[]> {
@@ -239,8 +240,6 @@ export async function images(query: string): Promise<ImageResult[]> {
   if (pexels.length >= 2) {
     const selected = pexels.slice(0, 2);
 
-    recordUsedImages(selected.map((image) => image.src));
-
     console.log(`[IMAGE] Pexels 2개 사용: ${cleanQuery}`);
 
     return selected;
@@ -252,8 +251,6 @@ export async function images(query: string): Promise<ImageResult[]> {
 
   if (unsplash.length >= 2) {
     const selected = unsplash.slice(0, 2);
-
-    recordUsedImages(selected.map((image) => image.src));
 
     console.log(`[IMAGE] Unsplash 2개 사용: ${cleanQuery}`);
 
@@ -268,8 +265,6 @@ export async function images(query: string): Promise<ImageResult[]> {
 
   if (mixed.length >= 2) {
     const selected = mixed.slice(0, 2);
-
-    recordUsedImages(selected.map((image) => image.src));
 
     console.log(`[IMAGE] Pexels + Unsplash 혼합 사용: ${cleanQuery}`);
 

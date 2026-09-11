@@ -2,6 +2,8 @@ import "dotenv/config";
 
 type ProviderName = "gemini" | "groq" | "openrouter";
 
+type JsonObject = Record<string, any>;
+
 const providers: Array<[string, ProviderName]> = [
   ["GEMINI_API_KEY", "gemini"],
   ["GROQ_API_KEY", "groq"],
@@ -17,7 +19,7 @@ function cleanJsonText(text: string): string {
     .trim();
 }
 
-function normalizeJson(value: unknown): Record<string, any> {
+function normalizeJson(value: unknown): JsonObject {
   if (Array.isArray(value)) {
     if (value.length === 0) {
       throw new Error("AI가 빈 배열을 반환했습니다.");
@@ -31,17 +33,17 @@ function normalizeJson(value: unknown): Record<string, any> {
 
     console.warn("[AI] 배열 응답을 첫 번째 객체로 정규화했습니다.");
 
-    return first as Record<string, any>;
+    return first as JsonObject;
   }
 
-  if (!value || typeof value !== "object") {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("AI 응답이 JSON 객체가 아닙니다.");
   }
 
-  return value as Record<string, any>;
+  return value as JsonObject;
 }
 
-function parseJson(text: string): Record<string, any> {
+function parseJson(text: string): JsonObject {
   const cleaned = cleanJsonText(text);
 
   // 1. 전체 JSON 파싱
@@ -92,14 +94,11 @@ async function readError(response: Response): Promise<string> {
   }
 }
 
-async function callGemini(
-  key: string,
-  prompt: string,
-): Promise<Record<string, any>> {
+async function callGemini(key: string, prompt: string): Promise<JsonObject> {
   const model = process.env.GEMINI_MODEL?.trim() || "gemini-2.5-flash-lite";
 
   const url =
-    `https://generativelanguage.googleapis.com/v1beta/models/` +
+    "https://generativelanguage.googleapis.com/v1beta/models/" +
     `${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`;
 
   const response = await fetch(url, {
@@ -132,8 +131,19 @@ async function callGemini(
 
   const data: any = await response.json();
 
-  const text = data?.candidates?.[0]?.content?.parts
-    ?.map((part: any) => part?.text || "")
+  const parts = data?.candidates?.[0]?.content?.parts;
+
+  if (!Array.isArray(parts)) {
+    const reason =
+      data?.candidates?.[0]?.finishReason ||
+      data?.promptFeedback?.blockReason ||
+      "응답 내용 없음";
+
+    throw new Error(`Gemini 응답 없음: ${reason}`);
+  }
+
+  const text = parts
+    .map((part: any) => (typeof part?.text === "string" ? part.text : ""))
     .join("")
     .trim();
 
@@ -153,7 +163,7 @@ async function callOpenAICompatible(
   provider: "groq" | "openrouter",
   key: string,
   prompt: string,
-): Promise<Record<string, any>> {
+): Promise<JsonObject> {
   const isGroq = provider === "groq";
 
   const model = isGroq
@@ -171,6 +181,7 @@ async function callOpenAICompatible(
 
   if (!isGroq) {
     const siteUrl = process.env.OPENROUTER_SITE_URL?.trim();
+
     const siteName = process.env.OPENROUTER_SITE_NAME?.trim();
 
     if (siteUrl) {
@@ -232,7 +243,7 @@ async function callOpenAICompatible(
   return parseJson(content);
 }
 
-export async function ai(prompt: string): Promise<Record<string, any>> {
+export async function ai(prompt: string): Promise<JsonObject> {
   const errors: string[] = [];
 
   for (const [keyName, provider] of providers) {
