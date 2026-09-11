@@ -1,12 +1,20 @@
 import type { ContentBlock } from "../../types/content";
 
-const clean = (v: string) =>
-  v.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\[(.*?)\]\((.*?)\)/g, "$1");
+const clean = (v: unknown) => {
+  if (typeof v !== "string") {
+    return "";
+  }
+
+  return v.replace(/\*\*(.*?)\*\*/g, "$1").replace(/\[(.*?)\]\((.*?)\)/g, "$1");
+};
 
 function parseMarkdownTable(content: string): {
   headers: string[];
   rows: string[][];
 } | null {
+  if (typeof content !== "string") {
+    return null;
+  }
   const text = content.trim();
 
   if (!text.includes("|")) {
