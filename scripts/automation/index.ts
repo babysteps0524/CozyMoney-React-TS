@@ -126,6 +126,146 @@ function createFallbackSlug(category: string): string {
   return `${category}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function normalizeMarkdownTableSections(sections: any[]): any[] {
+  const result: any[] = [];
+
+  for (const section of sections) {
+    if (
+      !section ||
+      section.type !== "paragraph" ||
+      typeof section.content !== "string"
+    ) {
+      result.push(section);
+      continue;
+    }
+
+    const text = section.content.trim();
+
+    if (!text.includes("|")) {
+      result.push(section);
+      continue;
+    }
+
+    let lines: string[] = text
+      .split(/\r?\n/)
+      .map((line: string) => line.trim())
+      .filter(Boolean);
+
+    // AI가 표 전체를 한 줄로 반환한 경우
+    if (lines.length === 1 && text.includes("| |")) {
+      lines = text
+        .split(/\s*\|\s*\|\s*/)
+        .map((line: string) => line.trim())
+        .filter(Boolean)
+        .map((line: string) => {
+          const value = line.startsWith("|") ? line : `| ${line}`;
+          return value.endsWith("|") ? value : `${value} |`;
+        });
+    }
+
+    if (lines.length < 2) {
+      result.push(section);
+      continue;
+    }
+
+    const parseRow = (line: string): string[] => {
+      const value = line.trim().replace(/^\|/, "").replace(/\|$/, "");
+
+      return value.split("|").map((cell: string) => cell.trim());
+    };
+
+    const headers = parseRow(lines[0]);
+    const separator = parseRow(lines[1]);
+
+    const isTable =
+      headers.length > 0 &&
+      separator.length === headers.length &&
+      separator.every((cell: string) => /^:?-{3,}:?$/.test(cell));
+
+    if (!isTable) {
+      result.push(section);
+      continue;
+    }
+
+    const rows = lines
+      .slice(2)
+      .map(parseRow)
+      .filter((row: string[]) => row.some((cell: string) => cell.length > 0))
+      .map((row: string[]) => {
+        const normalized = [...row];
+
+        while (normalized.length < headers.length) {
+          normalized.push("");
+        }
+
+        return normalized.slice(0, headers.length);
+      });
+
+    if (rows.length === 0) {
+      result.push(section);
+      continue;
+    }
+
+    result.push({
+      type: "table",
+      headers,
+      rows,
+    });
+  }
+
+  return result;
+}
+
+function insertImagesBetweenHeadings(sections: any[], images: any[]): any[] {
+  if (images.length !== 2) {
+    return sections;
+  }
+
+  const result: any[] = [];
+  let imageIndex = 0;
+  let h2Count = 0;
+
+  for (const section of sections) {
+    if (section?.type === "heading" && section.level === 2) {
+      h2Count++;
+
+      // 두 번째 H2 직전에 첫 번째 이미지
+      if (h2Count === 3 && imageIndex === 0) {
+        result.push({
+          type: "image",
+          ...images[0],
+        });
+
+        imageIndex++;
+      }
+
+      // 네 번째 H2 직전에 두 번째 이미지
+      if (h2Count === 5 && imageIndex === 1) {
+        result.push({
+          type: "image",
+          ...images[1],
+        });
+
+        imageIndex++;
+      }
+    }
+
+    result.push(section);
+  }
+
+  // H2가 충분하지 않은 경우 남은 이미지는 마지막에 추가
+  while (imageIndex < images.length) {
+    result.push({
+      type: "image",
+      ...images[imageIndex],
+    });
+
+    imageIndex++;
+  }
+
+  return result;
+}
+
 function createPrompt(
   category: string,
   candidate: any[],
@@ -280,6 +420,8 @@ async function generatePost(
       post.sections = [];
     }
 
+    post.sections = normalizeMarkdownTableSections(post.sections);
+
     if (!Array.isArray(post.faq)) {
       post.faq = [];
     }
@@ -312,13 +454,10 @@ async function publishPost(
     throw new Error("이미지 2개 확보 실패");
   }
 
-  post.sections = [
-    ...(Array.isArray(post.sections) ? post.sections : []),
-    ...post.images.map((image: any) => ({
-      type: "image",
-      ...image,
-    })),
-  ];
+  post.sections = insertImagesBetweenHeadings(
+    Array.isArray(post.sections) ? post.sections : [],
+    post.images,
+  );
 
   const validation = postSchema.safeParse(post);
 
